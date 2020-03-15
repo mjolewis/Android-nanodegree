@@ -1,7 +1,10 @@
 package com.projectpico.popularmovies;
 
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
@@ -25,7 +28,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
      *
      */
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
+        public View itemView;
 
+        /*
+        * Provide a reference to the views for each data item.
+         */
+        public MovieViewHolder(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+        }
     }
 
     @Override
