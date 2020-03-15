@@ -15,4 +15,25 @@ package com.projectpico.popularmovies;
  * @version March 15, 2020
  *********************************************************************************************************************/
 public class MovieData {
+    // Invariant of the MovieData.java class
+    //  1. The instance variable movieId will reference a specific movie returned from our query to themoviedb.org API
+    private String movieId;
+
+    /**
+     * public MovieData()
+     *  Constructs a new MovieData object.
+     * @exception OutOfMemoryError
+     *  Indicates insufficient memory for this new MovieData object.
+     */
+    public MovieData() {
+        movieId = null;
+    }
+
+    /**
+     * public String getMovieId()
+     *  Accessor method to retrieve the movieId
+     */
+    public String getMovieId() {
+        return movieId;
+    }
 }
