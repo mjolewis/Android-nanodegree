@@ -1,36 +1,38 @@
 package com.projectpico.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+/**********************************************************************************************************************
+ * The MainActivity is the entry point for the Popular Movie application. It's sole purpose is to send an intent to our
+ * MovieDisplay activity.
+ *
+ * @author mlewis
+ * @version March 15, 2020
+ *********************************************************************************************************************/
 public class MainActivity extends AppCompatActivity {
-    // Invariant of the MainActivity.java class
-    //  1. The instance variable recyclerView is a reference to the a RecyclerView object that acts as a container
-    //     for displaying movie data.
-    //  2. The instance variable adapter provides access to the items in your data set, creates views for items, and
-    //     replaces the content of some of the views with new data items when the original item is no longer visible.
-    //  3. The instance variable layoutManager positions item views inside a RecyclerVIew and determines when to reuse
-    //     item views that are no longer visible to the user. To recycle a view, a layoutManager asks the adapter to
-    //     replace the contents of the view with a different element from the data set.
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
+    /**
+     * protected void onCreate(Bundle savedInstanceState)
+     *  Inflates the activity_main layout and sends an intent to our MovieDisplay activity
+     * @param savedInstanceState
+     *  A bundle that that persists both configuration changes and process death.
+     * @exception OutOfMemoryError
+     *  Indicates insufficient memory for this new Intent object.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.rv_movies);
-
-
+        // Activate the MovieDisplay activity by sending an explicit intent
+        Intent intent = new Intent(this, MovieDisplay.class);
+        startActivity(intent);
     }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-
-    }
-
 }

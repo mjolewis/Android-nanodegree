@@ -1,5 +1,6 @@
 package com.projectpico.popularmovies;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -41,7 +42,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.id.rv_movies, parent, false);
+        return new MovieViewHolder(view);
     }
 
     @Override
