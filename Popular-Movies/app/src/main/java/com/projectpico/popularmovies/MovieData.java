@@ -17,7 +17,15 @@ package com.projectpico.popularmovies;
 public class MovieData {
     // Invariant of the MovieData.java class
     //  1. The instance variable movieId will reference a specific movie returned from our query to themoviedb.org API
+    //  2. The class variable SCHEME is used by our URI builder to build a URL for our API request.
+    //  3. The class variable HOST_URL is used by our URI builder to build a URL for our API request.
+    //  4. THe instance variable path refers to the exact location of the movie selected by the user.
+    //  5. The class variable QUERY_PARAM defines the specific content or action for the API request.
     private String movieId;
+    private static final String SCHEME = "https";
+    private static final String HOST_URL = "api.themoviedb.org";
+    private String path;
+    private static final String QUERY_PARAM = "q";
 
     /**
      * public MovieData()
