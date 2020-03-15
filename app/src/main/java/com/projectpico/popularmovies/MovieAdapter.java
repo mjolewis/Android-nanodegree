@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     // Invariant of the MovieAdapter.java class
-    // 1. a
-    private int count;
+    // 1. The instance variable itemCount is required by the concrete class getItemCount when extending a RecyclerView
+    //    Adapter. It provides a count of the number of items in our data source.
+    private int itemCount;
 
     /**
      * public int getItemCount()
@@ -17,12 +18,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
      */
     @Override
     public int getItemCount() {
-        return count;
-    }
-
-    @Override
-    public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        return itemCount;
     }
 
     /**
@@ -30,6 +26,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
      */
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
 
+    }
+
+    @Override
+    public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return null;
     }
 
     @Override
