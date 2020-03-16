@@ -5,11 +5,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.projectpico.popularmovies.utilities.NetworkUtils;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
@@ -36,6 +44,10 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         setRecyclerView();
     }
 
+    public JSONObject getMovieData() {
+        // FIXME: 3/16/20
+    }
+
     /**
      * public boolean onCreateOptionsMenu(Menu menu)
      *  Inflates the menu item.
@@ -49,21 +61,6 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_query_option, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    /*
-     * private void setRecyclerView()
-     *  Sets up a recyclerView using the GridLayoutManager.
-     * @postcondition
-     *  A new GridLayoutManager has been initialized.
-     * @exception OutOfMemoryError
-     *  Indicates insufficient memory for this new GridLayoutManager.
-     */
-    private void setRecyclerView() {
-        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
-
-        // FIXME: 3/16/20
-        recyclerView.setAdapter(new MovieAdapter());
     }
 
     /**
@@ -82,5 +79,56 @@ public class MovieRecyclerActivity extends AppCompatActivity {
             queryParam = TOP_RATED_MOVIES;
         }
         Log.d(TAG, "Menu item " + title + " was clicked");
+    }
+
+    /*
+     * private void setRecyclerView()
+     *  Sets up a recyclerView using the GridLayoutManager.
+     * @postcondition
+     *  A new GridLayoutManager has been initialized.
+     * @exception OutOfMemoryError
+     *  Indicates insufficient memory for this new GridLayoutManager.
+     */
+    private void setRecyclerView() {
+        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
+
+        // FIXME: 3/16/20
+        recyclerView.setAdapter(new MovieAdapter());
+    }
+
+    /******************************************************************************************************************
+     * The ApiRequest class extends AsyncTask to perform a network request on a background thread. The results on the
+     * network request are then published on our UI thread.
+     *
+     * @author mlewis
+     * @version March 16, 2020
+     *****************************************************************************************************************/
+    public class MovieDatabaseQueryTask extends AsyncTask<URL, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            Log.d(TAG, "AsyncTask has started working.");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            Log.d(TAG, "AsyncTask is working in the background.");
+            URL searchUrl = urls[0];
+            String movieDatabaseRequest = null;
+
+            // FIXME: 3/16/20
+            try {
+                movieDatabaseRequest = NetworkUtils.
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.d(TAG, "API request " + s + " complete.");
+            super.onPostExecute(s);
+        }
     }
 }
