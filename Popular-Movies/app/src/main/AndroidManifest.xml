@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MovieRecyclerActivity"></activity>
-        <activity android:name=".MovieDetailActivity" />
+        <activity android:name=".MovieDetailActivity"
+            android:parentActivityName=".MovieRecyclerActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
