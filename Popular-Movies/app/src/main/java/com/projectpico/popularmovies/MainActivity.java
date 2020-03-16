@@ -1,13 +1,9 @@
 package com.projectpico.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 /**********************************************************************************************************************
  * The MainActivity is the entry point for the Popular Movie application. It's sole purpose is to send an intent to our
@@ -32,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Activate the MovieDisplay activity by sending an explicit intent
-        Intent intent = new Intent(this, MovieDisplay.class);
+        Intent intent = new Intent(this, MovieRecyclerActivity.class);
         startActivity(intent);
     }
 }
