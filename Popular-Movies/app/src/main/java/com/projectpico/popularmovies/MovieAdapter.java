@@ -1,7 +1,6 @@
 package com.projectpico.popularmovies;
 
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -20,11 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
  *********************************************************************************************************************/
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     // Invariant of the MovieAdapter.java class
-    // 1. The instance variable itemCount is required by the concrete class getItemCount when extending a RecyclerView
+    //  1. The instance variable itemCount is required by the concrete class getItemCount when extending a RecyclerView
     //    Adapter. It provides a count of the number of items in our data source.
-    // 2. The instance variables movieTitle, movieReleaseDate, movieVoteAverage, moviePlot, and moviePoster are
+    //  2. The instance variables movieTitle, movieReleaseDate, movieVoteAverage, moviePlot, and moviePoster are
     //    references to the data items that we retrieve from our data set.
-    // 3. The class variable TAG is used for debugging purposes.
+    //  3. The class variable TAG is used for debugging purposes.
     private int itemCount;
     private String movieTitle;
     private String movieReleaseDate;
