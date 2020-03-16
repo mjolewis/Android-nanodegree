@@ -10,13 +10,13 @@ import android.os.Bundle;
  * MovieDisplay activity.
  *
  * @author mlewis
- * @version March 15, 2020
+ * @version March 16, 2020
  *********************************************************************************************************************/
 public class MainActivity extends AppCompatActivity {
 
     /**
      * protected void onCreate(Bundle savedInstanceState)
-     *  Inflates the activity_main layout and sends an intent to our MovieDisplay activity
+     *  A launcher activity that inflates the activity_main layout and sends an intent to our MovieDisplay activity.
      * @param savedInstanceState
      *  A bundle that that persists both configuration changes and process death.
      * @exception OutOfMemoryError
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Activate the MovieDisplay activity by sending an explicit intent
+        // Launch the MovieDisplay activity by sending an explicit intent
         Intent intent = new Intent(this, MovieRecyclerActivity.class);
         startActivity(intent);
     }
