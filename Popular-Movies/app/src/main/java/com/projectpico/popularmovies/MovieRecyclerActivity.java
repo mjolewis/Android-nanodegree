@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
@@ -31,6 +34,21 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         setRecyclerView();
     }
 
+    /**
+     * public boolean onCreateOptionsMenu(Menu menu)
+     *  Inflates the menu item.
+     * @param menu
+     *  The menu item to inflate
+     * @return boolean
+     *  True if menu was created. False otherwise.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_query_option, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     /*
      * private void setRecyclerView()
      *  Sets up a recyclerView using the GridLayoutManager.
@@ -46,5 +64,9 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
         adapter = new MovieAdapter();
         recyclerView.setAdapter(adapter);
+    }
+
+    public void onMenuItemClick(MenuItem item) {
+        // TODO: 3/16/20  
     }
 }
