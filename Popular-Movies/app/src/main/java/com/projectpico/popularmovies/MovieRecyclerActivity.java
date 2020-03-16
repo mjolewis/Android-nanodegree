@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 
-public class MovieDisplay extends AppCompatActivity {
+public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
     //  1. The instance variable recyclerView is a reference to the a RecyclerView object that acts as a container
     //     for displaying movie data.
