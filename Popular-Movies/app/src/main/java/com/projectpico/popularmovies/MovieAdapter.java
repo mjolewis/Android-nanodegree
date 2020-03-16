@@ -2,7 +2,6 @@ package com.projectpico.popularmovies;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -58,7 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
      * @param parent
      *  The ViewGroup into which the new View will be added after it is bound to an adapter position.
      * @param viewType
-     *  The view type of the new View
+     *  The view type of the new View.
      * @return MovieAdapter.MovieViewHolder
      *  A new ViewHolder that holds a View of the given view type.
      * @exception OutOfMemoryError
@@ -68,7 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_detail, parent, false);
+                .inflate(R.layout.activity_movie_detail, parent, false);
         return new MovieViewHolder(cardView);
     }
 
@@ -86,10 +85,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         Log.d(TAG, "Element " + position + " set.");
 
         /*
-         * Get an element from our data set at this position and and replace the contents of the view with this
-         * element.
+         * Get the inflated cardView from our MovieAdapter and use that View to get a reference to the layouts imageView.
+         * Get an element from our data set at the specified position and and replace the contents of the view with
+         * this element.
          */
-        // FIXME: 3/16/20 
-        ImageView imageView = holder.
+        CardView cardView = holder.cardView;
+        ImageView imageView = cardView.findViewById(R.id.iv_movie_poster);
+        // FIXME: 3/16/20 set the image and text
     }
 }
