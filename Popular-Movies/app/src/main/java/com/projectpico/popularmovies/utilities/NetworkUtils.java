@@ -6,10 +6,12 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Scanner;
 
 /**********************************************************************************************************************
  * A utility class to facilitate network communications.
@@ -30,7 +32,7 @@ public class NetworkUtils {
     private static final String QUERY_KEY = "q";
     private String defaultQueryValue = "popular";
     private static final String API_KEY = "api_key";
-    private static final String API_VALUE = "f8c05a84150db926a13b793d60890bf4";
+    private static final String API_VALUE = "";
     private static final String TAG = "NetworkUtils";
 
 
@@ -56,10 +58,9 @@ public class NetworkUtils {
      */
     public URL UriBuilder(String movieSearchQuery) {
         Log.d(TAG, "Building url for network request.");
-        Uri.Builder builder = new Uri.Builder();
-
         if (!movieSearchQuery.equals(defaultQueryValue)) { defaultQueryValue = movieSearchQuery; }
 
+        Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME)
                 .authority(AUTHORITY)
                 .path(PATH)
@@ -76,11 +77,31 @@ public class NetworkUtils {
         return url;
     }
 
+    /**
+     * public static String getResponseFromHttpUrl(URL url) throw IOException
+     * Opens a url connection and attempts to return an input stream that reads from this open connection.
+     * @param url
+     *  The url we are attempting to connect to and to ready data from.
+     * @return String
+     *  The input stream.
+     * @throws IOException
+     *  Indicates an I/O error has occurred while creating the input stream.
+     */
     public static String getResponseFromHttpUrl(URL url) throws IOException {
+        Log.d(TAG, "Opening a url connection.");
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
         try {
-            // TODO: 3/16/20
+            InputStream inputStream = urlConnection.getInputStream();
+
+            Scanner scanner = new Scanner(inputStream);
+            scanner.useDelimiter("\\A");
+
+            if (scanner.hasNext()) {
+                return scanner.next();
+            } else {
+                return null;
+            }
         } finally {
             urlConnection.disconnect();
         }
