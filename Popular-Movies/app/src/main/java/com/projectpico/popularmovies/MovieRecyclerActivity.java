@@ -47,17 +47,15 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
         getUrlAndNetworkConnection();
 
-        Log.d(TAG, "Made API request.");
-        MovieAdapter adapter = null;
+        Movie movie = null;
         try {
-            Movie jsonResults = JsonUtils.parseMovieData(networkResult);
-            Log.d(TAG, "made JSON request");
-            //adapter = new MovieAdapter(json);
+            movie = JsonUtils.parseMovieData(networkResult);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         Log.d(TAG, "Setting adapter.");
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(movie.getPosterPath());
     }
 
     /**
