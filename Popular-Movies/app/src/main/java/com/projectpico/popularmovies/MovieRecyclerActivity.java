@@ -45,13 +45,14 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
         recyclerView.setHasFixedSize(true);
 
-        makeApiRequest();
+        getUrlAndNetworkConnection();
+
         Log.d(TAG, "Made API request.");
         MovieAdapter adapter = null;
         try {
-            ArrayList<String> json = JsonUtils.parseJson(networkResult);
+            Movie jsonResults = JsonUtils.parseMovieData(networkResult);
             Log.d(TAG, "made JSON request");
-            adapter = new MovieAdapter(json);
+            //adapter = new MovieAdapter(json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -90,11 +91,11 @@ public class MovieRecyclerActivity extends AppCompatActivity {
             defaultQueryParam = TOP_RATED_MOVIES;
         }
 
-        makeApiRequest();
+        getUrlAndNetworkConnection();
         Log.d(TAG, "Menu item " + title + " was clicked");
     }
 
-    public void makeApiRequest() {
+    public void getUrlAndNetworkConnection() {
         URL movieSearchUrl = NetworkUtils.UriBuilder(defaultQueryParam);
         new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
@@ -115,6 +116,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(URL... urls) {
+            Log.d(TAG, "Background thread has started.");
             URL searchUrl = urls[0];
             networkResult = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             return networkResult;
