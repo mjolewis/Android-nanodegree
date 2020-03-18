@@ -34,7 +34,7 @@ public class NetworkUtils {
     private static final String AUTHORITY = "api.themoviedb.org";
     private static final String PATH = "3/discover/movie";
     private static final String API_KEY = "api_key";
-    private static final String API_VALUE = "";
+    private static final String API_VALUE = "f8c05a84150db926a13b793d60890bf4";
     private static final String SORT_BY = "sort_by";
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
