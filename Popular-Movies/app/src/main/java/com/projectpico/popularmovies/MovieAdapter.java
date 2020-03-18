@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**********************************************************************************************************************
  * Adapters provide a binding from an app-specific data set to views that are displayed within a RecyclerView.
@@ -23,7 +24,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     // Invariant of the MovieAdapter.java class
     //  1. The instance variable moviePoster is a reference to the poster paths for the movie images.
     //  2. The class variable TAG is used for debugging purposes.
-    private String[] posterPaths;
+    private List<String> posterPaths;
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
     /**
@@ -35,7 +36,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for a new MovieAdapter.
      */
-    public MovieAdapter(String[] posterPaths) {
+    public MovieAdapter(List<String> posterPaths) {
         this.posterPaths = posterPaths;
     }
 
@@ -47,7 +48,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        return posterPaths.length;
+        return posterPaths.size();
     }
 
     /**

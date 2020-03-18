@@ -40,22 +40,23 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
-
         recyclerView = findViewById(R.id.rv_movies);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
-        recyclerView.setHasFixedSize(true);
 
         getUrlAndNetworkConnection();
 
-        Movie movie = null;
+        Movie movie;
+        MovieAdapter adapter = null;
         try {
             movie = JsonUtils.parseMovieData(networkResult);
+            adapter = new MovieAdapter(movie.getPosterPath());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "Setting adapter.");
-        recyclerView.setAdapter(movie.getPosterPath());
+        Log.d(TAG, "Attaching the adapter and layout manager.");
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
+        recyclerView.setHasFixedSize(true);
     }
 
     /**
