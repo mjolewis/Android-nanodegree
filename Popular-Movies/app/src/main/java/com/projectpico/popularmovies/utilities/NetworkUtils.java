@@ -2,38 +2,41 @@ package com.projectpico.popularmovies.utilities;
 
 import android.net.Uri;
 import android.util.Log;
-
-import org.json.JSONObject;
+import android.util.StateSet;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Scanner;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**********************************************************************************************************************
  * A utility class to facilitate network communications.
+ *
+ * @note
+ *  1. This class requires an API key. You will need to request an API key by creating an account
+ *  @link {https://www.themoviedb.org/?_dc=1584461074}.
  *
  * @author mlewis
  * @version March 16, 2020
  *********************************************************************************************************************/
 public class NetworkUtils {
     // Invariant of the MovieData.java class
-    //  1. The instance variable scheme is used to build our uri which is used in our network request.
-    //  2. The instance variable hostUrl is used to build our uri which is used in our network request.
-    //  3. THe instance variable path is used to build our uri which is used in our network request.
-    //  4. The instance variable queryParam is used to build our uri which is used in our network request.
+    //  1. The class variable SCHEME is used to build our uri which is used in our network request.
+    //  2. The class variable AUTHORITY is used to build our uri which is used in our network request.
+    //  3. THe class variable PATH is used to build our uri which is used in our network request.
+    //  4. The class variable
     //  5. The class variable TAG is used for debugging purposes.
     private static final String SCHEME = "https";
     private static final String AUTHORITY = "api.themoviedb.org";
-    private static final String PATH = "3/movie";
-    private static final String QUERY_KEY = "q";
-    private String defaultQueryValue = "popular";
+    private static final String PATH = "3/discover/movie";
     private static final String API_KEY = "api_key";
     private static final String API_VALUE = "";
-    private static final String TAG = "NetworkUtils";
+    private static final String SORT_BY = "sort_by";
+    private static final String TAG = NetworkUtils.class.getSimpleName();
 
 
     /**
@@ -56,16 +59,18 @@ public class NetworkUtils {
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for this new URL.
      */
-    public URL UriBuilder(String movieSearchQuery) {
+    public static URL UriBuilder(String movieSearchQuery) {
         Log.d(TAG, "Building url for network request.");
-        if (!movieSearchQuery.equals(defaultQueryValue)) { defaultQueryValue = movieSearchQuery; }
+
+        String defaultSortValue = "popular.asc";
+        if (!movieSearchQuery.equals(defaultSortValue)) { defaultSortValue = movieSearchQuery; }
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME)
                 .authority(AUTHORITY)
                 .path(PATH)
-                .appendQueryParameter(QUERY_KEY, defaultQueryValue)
                 .appendQueryParameter(API_KEY, API_VALUE)
+                .appendQueryParameter(SORT_BY, defaultSortValue)
                 .build();
 
         URL url = null;
@@ -87,23 +92,36 @@ public class NetworkUtils {
      * @throws IOException
      *  Indicates an I/O error has occurred while creating the input stream.
      */
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
+    public static String getResponseFromHttpUrl(URL url) {
         Log.d(TAG, "Opening a url connection.");
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+        HttpsURLConnection urlConnection = null;
         try {
-            InputStream inputStream = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(inputStream);
-            scanner.useDelimiter("\\A");
-
-            if (scanner.hasNext()) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-            urlConnection.disconnect();
+            urlConnection = (HttpsURLConnection) url.openConnection();
+            Log.d(TAG, "URL connection is: " + urlConnection);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        if (urlConnection != null) {
+            try {
+                InputStream inputStream = urlConnection.getInputStream();
+                Log.d(TAG, "InputStream is: " + inputStream);
+
+                Scanner scanner = new Scanner(inputStream);
+                scanner.useDelimiter("\\A");
+
+                if (scanner.hasNext()) {
+                    return scanner.next();
+                } else {
+                    return null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                urlConnection.disconnect();
+            }
+        }
+        return "";
     }
 }

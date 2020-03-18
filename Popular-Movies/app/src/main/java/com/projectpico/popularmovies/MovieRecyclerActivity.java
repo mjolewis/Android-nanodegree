@@ -4,36 +4,42 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.projectpico.popularmovies.utilities.JsonUtils;
 import com.projectpico.popularmovies.utilities.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
     //  1. The instance variable recyclerView is a reference to the a RecyclerView object that acts as a container
     //     for displaying movie data.
-    //  2. The instance variable queryParam refers to the type of movies the user wants to query.
+    //  2. The instance variable defaultQueryParam refers to the type of movies the user wants to query.
     //  3. The class variable SPAN_COUNT indicates the number of columns created by the GridLayoutManager.
     //  4. The class variables POPULAR_MOVIES and TOP_RATED_MOVIES refer to the query options provided to the user and
     //     that are used in our tbmovie.org API request.
     //  5. The class variable TAG is used for debugging purposes.
     private RecyclerView recyclerView;
-    private static String queryParam;
+    private static String defaultQueryParam = "popular.asc";
     private static final int SPAN_COUNT = 2;
-    private static final String POPULAR_MOVIES = "popular";
-    private static final String TOP_RATED_MOVIES = "top_rated";
-    private static final String TAG = "MovieRecyclerActivity";
+    private static final String POPULAR_MOVIES = "popular.asc";
+    private static final String TOP_RATED_MOVIES = "vote_average.asc";
+    private static final String TAG = MovieRecyclerActivity.class.getSimpleName();
+    private static String networkResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +47,21 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_display);
 
         recyclerView = findViewById(R.id.rv_movies);
-        setRecyclerView();
-    }
+        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
+        recyclerView.setHasFixedSize(true);
 
-    public JSONObject getMovieData() {
-        // FIXME: 3/16/20
+        makeApiRequest();
+        Log.d(TAG, "Made API request.");
+        MovieAdapter adapter = null;
+        try {
+            ArrayList<String> json = JsonUtils.parseJson(networkResult);
+            Log.d(TAG, "made JSON request");
+            adapter = new MovieAdapter(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "Setting adapter.");
+        recyclerView.setAdapter(adapter);
     }
 
     /**
@@ -74,26 +90,18 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         String title = (String) item.getTitle();
 
         if (id == R.id.menu_most_popular_movie) {
-            queryParam = POPULAR_MOVIES;
+            defaultQueryParam = POPULAR_MOVIES;
         } else if (id == R.id.menu_highest_rated) {
-            queryParam = TOP_RATED_MOVIES;
+            defaultQueryParam = TOP_RATED_MOVIES;
         }
+
+        makeApiRequest();
         Log.d(TAG, "Menu item " + title + " was clicked");
     }
 
-    /*
-     * private void setRecyclerView()
-     *  Sets up a recyclerView using the GridLayoutManager.
-     * @postcondition
-     *  A new GridLayoutManager has been initialized.
-     * @exception OutOfMemoryError
-     *  Indicates insufficient memory for this new GridLayoutManager.
-     */
-    private void setRecyclerView() {
-        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
-
-        // FIXME: 3/16/20
-        recyclerView.setAdapter(new MovieAdapter());
+    public void makeApiRequest() {
+        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultQueryParam);
+        new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
 
     /******************************************************************************************************************
@@ -103,7 +111,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
      * @author mlewis
      * @version March 16, 2020
      *****************************************************************************************************************/
-    public class MovieDatabaseQueryTask extends AsyncTask<URL, Void, String> {
+    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, String> {
         @Override
         protected void onPreExecute() {
             Log.d(TAG, "AsyncTask has started working.");
@@ -112,23 +120,14 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(URL... urls) {
-            Log.d(TAG, "AsyncTask is working in the background.");
             URL searchUrl = urls[0];
-            String movieDatabaseRequest = null;
-
-            // FIXME: 3/16/20
-            try {
-                movieDatabaseRequest = NetworkUtils.
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+            networkResult = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            return networkResult;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            Log.d(TAG, "API request " + s + " complete.");
-            super.onPostExecute(s);
+        protected void onPostExecute(String movieSearchResults) {
+            super.onPostExecute(movieSearchResults);
         }
     }
 }
