@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 /**********************************************************************************************************************
  * Adapters provide a binding from an app-specific data set to views that are displayed within a RecyclerView.
  * 
@@ -29,34 +31,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private String movieReleaseDate;
     private String movieVoteAverage;
     private String moviePlot;
-    private Drawable moviePoster;
-    private static final String TAG = "MovieAdapter";
+    private String moviePoster;
+    private static final String TAG = MovieAdapter.class.getSimpleName();
 
     /**
-     * public MovieAdapter(String movieTitle, String movieReleaseDate, String movieVoteAverage, String moviePlot,
-     *                         Image moviePoster)
+     * public MovieAdapter(ArrayList<String> json)
      *  Initializes a custom Adapter, which provides a binding from our movies API data set to views that are displayed
      *  within the apps RecyclerView.
-     * @param movieTitle
-     *  The title of the movie.
-     * @param movieReleaseDate
-     *  The release date of the movie.
-     * @param movieVoteAverage
-     *  The average viewer rating of the movie.
-     * @param moviePlot
-     *  A short description of the movie plot.
-     * @param moviePoster
-     *  An image of the movie poster.
+     * @param json
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for a new MovieAdapter.
      */
-    public MovieAdapter(String movieTitle, String movieReleaseDate, String movieVoteAverage, String moviePlot,
-                        Drawable moviePoster) {
-        this.movieTitle = movieTitle;
-        this.movieReleaseDate = movieReleaseDate;
-        this.movieVoteAverage = movieVoteAverage;
-        this.moviePlot = moviePlot;
-        this.moviePoster = moviePoster;
+    public MovieAdapter(ArrayList<String> json) {
+        this.movieReleaseDate = json.get(0);
+        this.moviePoster = json.get(1);
+        this.movieVoteAverage = json.get(2);
+        this.moviePlot = json.get(1);
     }
 
     /**
@@ -107,13 +97,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
          * Get the view id's from our ViewHolder and replace the contents of the view with the appropriate data from
          * our data set in the specified position
          */
+        holder.getAdapterPosition();
+
+
         holder.getTitle().setText(movieTitle);
         holder.getReleaseDate().setText(movieReleaseDate);
         holder.getVoteAverage().setText(movieVoteAverage);
         holder.getMoviePlot().setText(moviePlot);
-        holder.getMoviePoster().setImageDrawable(moviePoster);
+        holder.getMoviePoster().setText(moviePoster);
 
-        // FIXME: 3/16/20 set the image and text
+        // FIXME: 3/16/20 bind the position
     }
 
     /******************************************************************************************************************
@@ -129,7 +122,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         private final TextView releaseDate;
         private final TextView voteAverage;
         private final TextView moviePlot;
-        private final ImageView moviePoster;
+        private final TextView moviePoster;
 
         /**
          * public MovieViewHolder(CardView view)
@@ -194,6 +187,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
          * @return ImageView
          *  The id for the movie poster layout file.
          */
-        public ImageView getMoviePoster() { return moviePoster; }
+        public TextView getMoviePoster() { return moviePoster; }
     }
 }
