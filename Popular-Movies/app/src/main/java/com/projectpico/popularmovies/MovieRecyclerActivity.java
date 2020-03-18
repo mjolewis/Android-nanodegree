@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,13 +13,9 @@ import android.view.MenuItem;
 
 import com.projectpico.popularmovies.utilities.JsonUtils;
 import com.projectpico.popularmovies.utilities.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -44,7 +39,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_display);
+        setContentView(R.layout.activity_recycler_view);
 
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
