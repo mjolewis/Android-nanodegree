@@ -1,5 +1,7 @@
 package com.projectpico.popularmovies;
 
+import java.util.List;
+
 /**********************************************************************************************************************
  * Builds a movie object.
  *
@@ -9,11 +11,11 @@ package com.projectpico.popularmovies;
 public class Movie {
     // Invariant of the Movie.java class
     //  1. The instance variables describe metadata about each movie object.
-    private String title;
-    private String releaseDate;
-    private String posterPath;
-    private String voteAverage;
-    private String plot;
+    private List<String> title;
+    private List<String> releaseDate;
+    private List<String> posterPath;
+    private List<String> voteAverage;
+    private List<String> plot;
 
     /**
      * public Movie()
@@ -38,7 +40,8 @@ public class Movie {
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for this Movie.
      */
-    public Movie(String title, String releaseDate, String posterPath, String voteAverage, String plot) {
+    public Movie(List<String> title, List<String>  releaseDate, List<String>  posterPath, List<String>  voteAverage,
+                 List<String>  plot) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
@@ -46,43 +49,43 @@ public class Movie {
         this.plot = plot;
     }
 
-    public String getTitle() {
+    public List<String>  getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(List<String>  title) {
         this.title = title;
     }
 
-    public String getReleaseDate() {
+    public List<String>  getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(List<String>  releaseDate) {
         this.releaseDate = releaseDate;
     }
 
-    public String getPosterPath() {
+    public List<String>  getPosterPath() {
         return posterPath;
     }
 
-    public void setPosterPath(String posterPath) {
+    public void setPosterPath(List<String>  posterPath) {
         this.posterPath = posterPath;
     }
 
-    public String getVoteAverage() {
+    public List<String>  getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(String voteAverage) {
+    public void setVoteAverage(List<String>  voteAverage) {
         this.voteAverage = voteAverage;
     }
 
-    public String getPlot() {
+    public List<String>  getPlot() {
         return plot;
     }
 
-    public void setPlot(String plot) {
+    public void setPlot(List<String>  plot) {
         this.plot = plot;
     }
 }

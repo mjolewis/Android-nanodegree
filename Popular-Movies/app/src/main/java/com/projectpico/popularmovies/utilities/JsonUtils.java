@@ -2,8 +2,10 @@ package com.projectpico.popularmovies.utilities;
 
 import android.util.Log;
 
+import com.projectpico.popularmovies.Movie;
 import com.projectpico.popularmovies.MovieAdapter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,30 +30,29 @@ public class JsonUtils {
     private static final String PLOT = "overview";
     private static final String TAG = "JsonUtils";
 
-    public static ArrayList<String> parseJson(String json) throws JSONException {
+    public static Movie parseMovieData(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
-        ArrayList<String> arrayList = new ArrayList<>();
         JSONObject results;
-        String title = "";
-        String release_date = "";
-        String posterPath = "";
-        String voteAverage = "";
-        String plot = "";
+        List<String> titles = new ArrayList<>();
+        List<String> releaseDates = new ArrayList<>();
+        List<String> posterPaths = new ArrayList<>();
+        List<String> voteAverages = new ArrayList<>();
+        List<String> plots = new ArrayList<>();
 
+        /*
+        * The variables below are all string elements in JSON. We retrieve each of these directly using opString()
+         */
         results = jsonObject.optJSONObject(RESULTS);
-        Log.d(TAG, "Json result values are: " + String.valueOf(results));
         if (results != null) {
-            Log.d(TAG, "has started parsing.");
-
-            title = results.optString(TITLE);
-            arrayList.add(results.optString(RELEASE_DATE));
-            arrayList.add(results.optString(POSTER_PATH));
-            arrayList.add(results.optString(VOTE_AVERAGE));
-            arrayList.add(results.optString(PLOT));
-
-            Log.d(TAG, title + " " + release_date + " " + voteAverage);
+            for (int i = 0; i < results.length(); i++) {
+                titles.add(results.optString(TITLE));
+                releaseDates.add(results.optString(RELEASE_DATE));
+                posterPaths.add(results.optString(POSTER_PATH));
+                voteAverages.add(results.optString(VOTE_AVERAGE));
+                plots.add(results.optString(PLOT));
+            }
         }
 
-        return arrayList;
+        return new Movie(titles,releaseDates, posterPaths, voteAverages, plots);
     }
 }

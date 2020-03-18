@@ -91,10 +91,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         CardView cardView = holder.cardView;
         ImageView imageView = (ImageView) cardView.findViewById(R.id.iv_movie_poster);
 
-        Picasso.get()
-                .load(posterPaths)
+        //Picasso.get()
+                //.load(posterPaths)
                 //.placeholder()
-                .into(imageView);
+                //.into(imageView);
         // FIXME: 3/18/20 use piccaso?
     }
 
