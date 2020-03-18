@@ -1,11 +1,7 @@
 package com.projectpico.popularmovies.utilities;
 
-import android.util.Log;
-
 import com.projectpico.popularmovies.Movie;
-import com.projectpico.popularmovies.MovieAdapter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
