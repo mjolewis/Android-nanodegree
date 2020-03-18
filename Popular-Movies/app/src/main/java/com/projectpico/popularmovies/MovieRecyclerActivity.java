@@ -17,7 +17,6 @@ import com.projectpico.popularmovies.utilities.NetworkUtils;
 import org.json.JSONException;
 
 import java.net.URL;
-import java.util.ArrayList;
 
 public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
@@ -34,7 +33,6 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     private static final String POPULAR_MOVIES = "popular.asc";
     private static final String TOP_RATED_MOVIES = "vote_average.asc";
     private static final String TAG = MovieRecyclerActivity.class.getSimpleName();
-    private static String networkResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +42,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
         getUrlAndNetworkConnection();
 
-        Movie movie;
-        MovieAdapter adapter = null;
-        try {
-            movie = JsonUtils.parseMovieData(networkResult);
-            adapter = new MovieAdapter(movie.getPosterPath());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, "Attaching the adapter and layout manager.");
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(null);
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
         recyclerView.setHasFixedSize(true);
     }
@@ -106,7 +94,10 @@ public class MovieRecyclerActivity extends AppCompatActivity {
      * @author mlewis
      * @version March 16, 2020
      *****************************************************************************************************************/
-    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, String> {
+    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, Movie> {
+        private String networkResults;
+        Movie movieInfo;
+
         @Override
         protected void onPreExecute() {
             Log.d(TAG, "AsyncTask has started working.");
@@ -114,16 +105,26 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(URL... urls) {
+        protected Movie doInBackground(URL... urls) {
             Log.d(TAG, "Background thread has started.");
             URL searchUrl = urls[0];
-            networkResult = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-            return networkResult;
+            networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            try {
+                movieInfo = JsonUtils.parseMovieData(networkResults);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return movieInfo;
         }
 
         @Override
-        protected void onPostExecute(String movieSearchResults) {
-            super.onPostExecute(movieSearchResults);
+        protected void onPostExecute(Movie movieInfo) {
+            super.onPostExecute(movieInfo);
+            if (movieInfo != null) {
+                MovieAdapter adapter = new MovieAdapter(movieInfo.getPosterPath());
+                adapter.notifyDataSetChanged();
+                Log.d(TAG, "movie paths are: " + movieInfo.getPosterPath());
+            }
         }
     }
 }
