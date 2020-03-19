@@ -96,7 +96,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
      *****************************************************************************************************************/
     public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, Movie> {
         private String networkResults;
-        Movie movieInfo;
+        Movie movieInfoObject;
 
         @Override
         protected void onPreExecute() {
@@ -109,13 +109,13 @@ public class MovieRecyclerActivity extends AppCompatActivity {
             Log.d(TAG, "Background thread has started.");
             URL searchUrl = urls[0];
             networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            Log.d(TAG, "Network result is: " + networkResults);
             try {
-                movieInfo = JsonUtils.parseMovieData(networkResults);
-                System.out.println("In try block " + movieInfo.getPosterPath());
+                movieInfoObject = JsonUtils.parseMovieData(networkResults);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return movieInfo;
+            return movieInfoObject;
         }
 
         @Override

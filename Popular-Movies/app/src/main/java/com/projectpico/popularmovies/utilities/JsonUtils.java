@@ -27,26 +27,45 @@ public class JsonUtils {
     private static final String PLOT = "overview";
     private static final String TAG = "JsonUtils";
 
+    /**
+     * public static Movie parseMovieData(String jsonString) throws JSONException
+     * Parses JSON retrieved from our API call to tbmovie.org.
+     * @param jsonString
+     *  The results from our API call to tbmovie.org. The structure of this string is a JSON object with the movie data
+     *  contained in a child array called "results".
+     * @return Movie
+     *  A new Move object.
+     * @throws JSONException
+     *  Indicates attempts to parse or construct malformed documents, use of null as a name, out of range lookups, or
+     *  type mismatches on lookups.
+     * @exception OutOfMemoryError
+     *  Indicates insufficient memory for this new Movie object.
+     */
     public static Movie parseMovieData(String jsonString) throws JSONException {
-        JSONObject movies = new JSONObject(jsonString);
         List<String> titles = new ArrayList<>();
         List<String> releaseDates = new ArrayList<>();
         List<String> posterPaths = new ArrayList<>();
         List<String> voteAverages = new ArrayList<>();
         List<String> plots = new ArrayList<>();
 
-        /*
-        * The variables below are all string elements in JSON. We retrieve each of these directly using opString()
+        // Get the JSON object representing the entire API query result.
+        JSONObject apiResults = new JSONObject(jsonString);
+
+        /* The movie results are in a child array called "results". This array contains multiple JSON "movieObjects"
+         * that we iterate through while searching for the target key/value pairs.
          */
-        JSONArray results = movies.optJSONArray(RESULTS);
-        // FIXME: 3/18/20 results is an array of JSON objects. Needd to get each object and then parse the keys
-        if (results != null) {
-            for (int i = 0; i < results.length(); i++) {
-                titles.add(results.optString(TITLE));
-                releaseDates.add(results.optString(RELEASE_DATE));
-                posterPaths.add(results.optString(POSTER_PATH));
-                voteAverages.add(results.optString(VOTE_AVERAGE));
-                plots.add(results.optString(PLOT));
+        JSONArray resultsArray = apiResults.optJSONArray(RESULTS);
+        if (resultsArray != null) {
+            JSONObject movieObjects;
+            for (int i = 0; i < resultsArray.length(); i++) {
+                movieObjects = resultsArray.optJSONObject(i);
+                if (movieObjects != null) {
+                    titles.add(movieObjects.optString(TITLE));
+                    releaseDates.add(movieObjects.optString(RELEASE_DATE));
+                    posterPaths.add(movieObjects.optString(POSTER_PATH));
+                    voteAverages.add(movieObjects.optString(VOTE_AVERAGE));
+                    plots.add(movieObjects.optString(PLOT));
+                }
             }
         }
 
