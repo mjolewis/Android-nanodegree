@@ -111,6 +111,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
             networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             try {
                 movieInfo = JsonUtils.parseMovieData(networkResults);
+                System.out.println("In try block " + movieInfo.getPosterPath());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

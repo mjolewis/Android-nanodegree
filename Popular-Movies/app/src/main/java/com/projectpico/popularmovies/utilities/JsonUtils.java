@@ -2,6 +2,7 @@ package com.projectpico.popularmovies.utilities;
 
 import com.projectpico.popularmovies.Movie;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +27,8 @@ public class JsonUtils {
     private static final String PLOT = "overview";
     private static final String TAG = "JsonUtils";
 
-    public static Movie parseMovieData(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        JSONObject results;
+    public static Movie parseMovieData(String jsonString) throws JSONException {
+        JSONObject movies = new JSONObject(jsonString);
         List<String> titles = new ArrayList<>();
         List<String> releaseDates = new ArrayList<>();
         List<String> posterPaths = new ArrayList<>();
@@ -38,7 +38,8 @@ public class JsonUtils {
         /*
         * The variables below are all string elements in JSON. We retrieve each of these directly using opString()
          */
-        results = jsonObject.optJSONObject(RESULTS);
+        JSONArray results = movies.optJSONArray(RESULTS);
+        // FIXME: 3/18/20 results is an array of JSON objects. Needd to get each object and then parse the keys
         if (results != null) {
             for (int i = 0; i < results.length(); i++) {
                 titles.add(results.optString(TITLE));
