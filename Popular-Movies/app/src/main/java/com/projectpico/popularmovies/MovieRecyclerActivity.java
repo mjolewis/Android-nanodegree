@@ -47,6 +47,18 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     }
 
     /**
+     * public void getUrlAndNetworkConnection
+     *  Builds a url that is passed to a background thread. The background thread processes a network requests to
+     *  retrieve movie data via the tbmovie.org API.
+     * @exception OutOfMemoryError
+     *  Indicates insufficient memory for this new background task.
+     */
+    public void getUrlAndNetworkConnection() {
+        URL movieSearchUrl = NetworkUtils.UriBuilder(path);
+        new MovieDatabaseQueryTask().execute(movieSearchUrl);
+    }
+
+    /**
      * public boolean onCreateOptionsMenu(Menu menu)
      *  Inflates the menu item.
      * @param menu
@@ -79,11 +91,6 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
         getUrlAndNetworkConnection();
         Log.d(TAG, "Menu item " + title + " was clicked");
-    }
-
-    public void getUrlAndNetworkConnection() {
-        URL movieSearchUrl = NetworkUtils.UriBuilder(path);
-        new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
 
     /******************************************************************************************************************
