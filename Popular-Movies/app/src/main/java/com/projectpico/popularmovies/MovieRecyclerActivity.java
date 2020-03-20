@@ -18,7 +18,6 @@ import org.json.JSONException;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
@@ -30,10 +29,10 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     //     that are used in our tbmovie.org API request.
     //  5. The class variable TAG is used for debugging purposes.
     private static RecyclerView recyclerView;
-    private static String defaultQueryParam = "popular.asc";
+    private static String path = "3/movie/popular";
+    private static final String PATH_POPULAR = "3/movie/popular";
+    private static final String PATH_TOP_RATED = "3/movie/top_rated";
     private static final int SPAN_COUNT = 2;
-    private static final String POPULAR_MOVIES = "popular.asc";
-    private static final String TOP_RATED_MOVIES = "vote_average.asc";
     private static final String TAG = MovieRecyclerActivity.class.getSimpleName();
 
     @Override
@@ -43,7 +42,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
 
-        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultQueryParam);
+        URL movieSearchUrl = NetworkUtils.UriBuilder(path);
         new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
 
@@ -73,9 +72,9 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         String title = (String) item.getTitle();
 
         if (id == R.id.menu_most_popular_movie) {
-            defaultQueryParam = POPULAR_MOVIES;
+            path = PATH_POPULAR;
         } else if (id == R.id.menu_highest_rated) {
-            defaultQueryParam = TOP_RATED_MOVIES;
+            path = PATH_TOP_RATED;
         }
 
         getUrlAndNetworkConnection();
@@ -83,7 +82,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     }
 
     public void getUrlAndNetworkConnection() {
-        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultQueryParam);
+        URL movieSearchUrl = NetworkUtils.UriBuilder(path);
         new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
 

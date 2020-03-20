@@ -1,5 +1,6 @@
 package com.projectpico.popularmovies;
 
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**********************************************************************************************************************
@@ -27,6 +30,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     //  2. The class variable TAG is used for debugging purposes.
     private ArrayList<Movie> movieArrayList;
     private Listener listener;
+    private String baseUrl = "https://image.tmdb.org/t/p/w185";
+    private String fullUrl;
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
     interface Listener {
@@ -99,8 +104,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         Movie currentMovie = movieArrayList.get(position);
 
+//        Uri.Builder builder = new Uri.Builder();
+//        builder.scheme(SCHEME)
+//                .authority(AUTHORITY)
+//                .path(currentMovie.getPosterPath());
+//
+//        URL url = null;
+//        try {
+//            url = new URL(builder.toString());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+
+        fullUrl = baseUrl + currentMovie.getPosterPath();
+        Log.d(TAG, "Poster path is: " + fullUrl);
+
         Picasso.get()
-                .load(currentMovie.getPosterPath())
+                .load(fullUrl)
                 //.placeholder()
                 //.error()
                 .into(holder.imageView);
