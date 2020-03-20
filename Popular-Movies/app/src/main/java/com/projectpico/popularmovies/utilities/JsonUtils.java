@@ -1,6 +1,7 @@
 package com.projectpico.popularmovies.utilities;
 
 import com.projectpico.popularmovies.Movie;
+import com.projectpico.popularmovies.MovieRecyclerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,12 +42,8 @@ public class JsonUtils {
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for this new Movie object.
      */
-    public static Movie parseMovieData(String jsonString) throws JSONException {
-        List<String> titles = new ArrayList<>();
-        List<String> releaseDates = new ArrayList<>();
-        List<String> posterPaths = new ArrayList<>();
-        List<String> voteAverages = new ArrayList<>();
-        List<String> plots = new ArrayList<>();
+    public static ArrayList<Movie> parseMovieData(String jsonString) throws JSONException {
+        ArrayList<Movie> movieData = new ArrayList<>();
 
         // Get the JSON object representing the entire API query result.
         JSONObject apiResults = new JSONObject(jsonString);
@@ -60,15 +57,12 @@ public class JsonUtils {
             for (int i = 0; i < resultsArray.length(); i++) {
                 movieObjects = resultsArray.optJSONObject(i);
                 if (movieObjects != null) {
-                    titles.add(movieObjects.optString(TITLE));
-                    releaseDates.add(movieObjects.optString(RELEASE_DATE));
-                    posterPaths.add(movieObjects.optString(POSTER_PATH));
-                    voteAverages.add(movieObjects.optString(VOTE_AVERAGE));
-                    plots.add(movieObjects.optString(PLOT));
+                    Movie movie = new Movie(movieObjects);
+                    movieData.add(movie);
                 }
             }
         }
 
-        return new Movie(titles,releaseDates, posterPaths, voteAverages, plots);
+        return movieData;
     }
 }

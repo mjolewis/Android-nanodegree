@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -24,20 +25,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     // Invariant of the MovieAdapter.java class
     //  1. The instance variable moviePoster is a reference to the poster paths for the movie images.
     //  2. The class variable TAG is used for debugging purposes.
-    private List<String> posterPaths;
+    private ArrayList<Movie> movieArrayList;
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
     /**
      * public MovieAdapter(ArrayList<String> json)
      *  Initializes a custom Adapter, which provides a binding from our movies API data set to views that are displayed
      *  within the apps RecyclerView.
-     * @param posterPaths
-     *  An array of poster paths for each movie image.
+     * @param movieArrayList
+     *  A movie object containing multiple ArrayLists of movie data such as "title', "releaseDate", "posterPaths",
+     *  "voteAverages", and "plots".
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for a new MovieAdapter.
      */
-    public MovieAdapter(List<String> posterPaths) {
-        this.posterPaths = posterPaths;
+    public MovieAdapter(ArrayList<Movie> movieArrayList) {
+        this.movieArrayList = movieArrayList;
+        Log.d(TAG, "New adapter constructed.");
     }
 
     /**
@@ -48,7 +51,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        return posterPaths.size();
+        // FIXME: 3/19/20
+        return 0;
     }
 
     /**
@@ -66,6 +70,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @NonNull
     @Override
     public MovieAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "Creating new viewholder.");
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_movie_image, parent, false);
         return new ViewHolder(cardView);
@@ -84,18 +89,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        /*
-         * Get the view id's from our ViewHolder and replace the contents of the view with the appropriate data from
-         * our data set in the specified position
-         */
-        holder.getAdapterPosition();
-        CardView cardView = holder.cardView;
-        ImageView imageView = (ImageView) cardView.findViewById(R.id.iv_movie_poster);
+        Movie currentMovie = movieArrayList.get(position);
 
-        //Picasso.get()
-                //.load(posterPaths)
+        Picasso.get()
+                .load(currentMovie.getPosterPath())
                 //.placeholder()
-                //.into(imageView);
+                //.error()
+                .into(holder.imageView);
+
+        Log.d(TAG, currentMovie.getPosterPath());
         // FIXME: 3/18/20 use piccaso?
     }
 
@@ -108,6 +110,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      *****************************************************************************************************************/
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cardView;
+        private ImageView imageView;
 
         /**
          * public MovieViewHolder(CardView view)
@@ -119,6 +122,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         public ViewHolder(CardView view) {
             super(view);
             cardView = view;
+            imageView = cardView.findViewById(R.id.rv_movies);
         }
     }
 }
