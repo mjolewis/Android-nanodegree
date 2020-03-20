@@ -2,11 +2,9 @@ package com.projectpico.popularmovies.utilities;
 
 import android.net.Uri;
 import android.util.Log;
-import android.util.StateSet;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
@@ -32,7 +30,8 @@ public class NetworkUtils {
     //  5. The class variable TAG is used for debugging purposes.
     private static final String SCHEME = "https";
     private static final String AUTHORITY = "api.themoviedb.org";
-    private static final String PATH = "3/discover/movie";
+    private static final String PATH_POPULAR = "3/movie/popular";
+    private static final String PATH_TOP_RATED = "3/movie/top_rated";
     private static final String API_KEY = "api_key";
     private static final String API_VALUE = "f8c05a84150db926a13b793d60890bf4";
     private static final String SORT_BY = "sort_by";
@@ -62,15 +61,14 @@ public class NetworkUtils {
     public static URL UriBuilder(String movieSearchQuery) {
         Log.d(TAG, "Building url for network request.");
 
-        String defaultSortValue = "popular.asc";
-        if (!movieSearchQuery.equals(defaultSortValue)) { defaultSortValue = movieSearchQuery; }
+        String path = PATH_POPULAR;
+        if (!movieSearchQuery.equals(path)) { path = PATH_TOP_RATED; }
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME)
                 .authority(AUTHORITY)
-                .path(PATH)
+                .path(path)
                 .appendQueryParameter(API_KEY, API_VALUE)
-                .appendQueryParameter(SORT_BY, defaultSortValue)
                 .build();
 
         URL url = null;
