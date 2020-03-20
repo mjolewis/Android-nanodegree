@@ -56,9 +56,7 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public String getPosterPath() {
-        return posterPath;
-    }
+    public String getPosterPath() { return posterPath; }
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;

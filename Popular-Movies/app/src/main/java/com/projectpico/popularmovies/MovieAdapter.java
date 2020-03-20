@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -14,21 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**********************************************************************************************************************
  * Adapters provide a binding from an app-specific data set to views that are displayed within a RecyclerView.
  * 
  * @author mlewis 
- * @version March 16, 2020
+ * @version March 20, 2020
  *********************************************************************************************************************/
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     // Invariant of the MovieAdapter.java class
-    //  1. The instance variable moviePoster is a reference to the poster paths for the movie images.
+    //  1. The instance variable movieArrayList is a list of move objects with the associated meta data for each move.
+    //  3. The instance variable listener listens for user clicks to activate the movie detail activity.
     //  2. The class variable TAG is used for debugging purposes.
     private ArrayList<Movie> movieArrayList;
-    private static final String TAG = MovieAdapter.class.getSimpleName();
     private Listener listener;
+    private static final String TAG = MovieAdapter.class.getSimpleName();
 
     interface Listener {
         void onClick(int position);

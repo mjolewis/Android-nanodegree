@@ -1,32 +1,25 @@
 package com.projectpico.popularmovies.utilities;
 
 import com.projectpico.popularmovies.Movie;
-import com.projectpico.popularmovies.MovieRecyclerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**********************************************************************************************************************
  * A utility class to parse JSON objects.
  *
  * @author mlewis
- * @version March 16, 2020
+ * @version March 20, 2020
  *********************************************************************************************************************/
 public class JsonUtils {
     // Invariant of the JsonUtils.java class.
     //  1. The class variables are used as keys for JSON parsing.
     //  2. The class variable TAG is used for debugging purposes.
     private static final String RESULTS = "results";
-    private static final String TITLE = "title";
-    private static final String RELEASE_DATE = "release_date";
-    private static final String POSTER_PATH = "poster_path";
-    private static final String VOTE_AVERAGE = "vote_average";
-    private static final String PLOT = "overview";
-    private static final String TAG = "JsonUtils";
+    private static final String TAG = JsonUtils.class.getSimpleName();
 
     /**
      * public static Movie parseMovieData(String jsonString) throws JSONException
@@ -45,11 +38,11 @@ public class JsonUtils {
     public static ArrayList<Movie> parseMovieData(String jsonString) throws JSONException {
         ArrayList<Movie> movieData = new ArrayList<>();
 
-        // Get the JSON object representing the entire API query result.
+        // Convert the JsonString into a JSONObject
         JSONObject apiResults = new JSONObject(jsonString);
 
         /* The movie results are in a child array called "results". This array contains multiple JSON "movieObjects"
-         * that we iterate through while searching for the target key/value pairs.
+         * that we iterate through while building new movie objects to add to our ArrayList
          */
         JSONArray resultsArray = apiResults.optJSONArray(RESULTS);
         if (resultsArray != null) {
