@@ -17,6 +17,8 @@ import com.projectpico.popularmovies.utilities.NetworkUtils;
 import org.json.JSONException;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class MovieRecyclerActivity extends AppCompatActivity {
     // Invariant of the MainActivity.java class
@@ -27,7 +29,8 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     //  4. The class variables POPULAR_MOVIES and TOP_RATED_MOVIES refer to the query options provided to the user and
     //     that are used in our tbmovie.org API request.
     //  5. The class variable TAG is used for debugging purposes.
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
+    private static MovieAdapter adapter = null;
     private static String defaultQueryParam = "popular.asc";
     private static final int SPAN_COUNT = 2;
     private static final String POPULAR_MOVIES = "popular.asc";
@@ -40,11 +43,10 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recycler_view);
         recyclerView = findViewById(R.id.rv_movies);
 
-        getUrlAndNetworkConnection();
-
-        recyclerView.setAdapter(null);
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
-        recyclerView.setHasFixedSize(true);
+        //getUrlAndNetworkConnection();
+        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultQueryParam);
+        new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
 
     /**
@@ -94,9 +96,9 @@ public class MovieRecyclerActivity extends AppCompatActivity {
      * @author mlewis
      * @version March 16, 2020
      *****************************************************************************************************************/
-    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, Movie> {
+    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
         private String networkResults;
-        Movie movieInfoObject;
+        ArrayList<Movie> moviesObject;
 
         @Override
         protected void onPreExecute() {
@@ -105,27 +107,38 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Movie doInBackground(URL... urls) {
+        protected ArrayList<Movie> doInBackground(URL... urls) {
             Log.d(TAG, "Background thread has started.");
+
+
             URL searchUrl = urls[0];
             networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             Log.d(TAG, "Network result is: " + networkResults);
             try {
-                movieInfoObject = JsonUtils.parseMovieData(networkResults);
+                moviesObject = JsonUtils.parseMovieData(networkResults);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return movieInfoObject;
+            return moviesObject;
         }
 
+        /**
+         * protected void onPostExecute
+         *  Executes on the main thread.
+         * @param moviesObject
+         *  An ArrayList<Movie> object
+         */
         @Override
-        protected void onPostExecute(Movie movieInfo) {
-            super.onPostExecute(movieInfo);
-            if (movieInfo != null) {
-                MovieAdapter adapter = new MovieAdapter(movieInfo.getPosterPath());
-                adapter.notifyDataSetChanged();
-                Log.d(TAG, "movie paths are: " + movieInfo.getPosterPath());
-            }
+        protected void onPostExecute(ArrayList<Movie> moviesObject) {
+            super.onPostExecute(moviesObject);
+
+            adapter = new MovieAdapter(moviesObject);
+            int size = moviesObject.size();
+            Log.d(TAG, "size is: " + String.valueOf(size));
+
+            recyclerView.setAdapter(adapter);
+            recyclerView.invalidate();
         }
     }
 }
