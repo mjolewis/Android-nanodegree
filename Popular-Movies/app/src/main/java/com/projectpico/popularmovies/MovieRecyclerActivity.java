@@ -30,7 +30,6 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     //     that are used in our tbmovie.org API request.
     //  5. The class variable TAG is used for debugging purposes.
     private static RecyclerView recyclerView;
-    private static MovieAdapter adapter = null;
     private static String defaultQueryParam = "popular.asc";
     private static final int SPAN_COUNT = 2;
     private static final String POPULAR_MOVIES = "popular.asc";
@@ -93,11 +92,11 @@ public class MovieRecyclerActivity extends AppCompatActivity {
      * network request are then published on our UI thread.
      *
      * @author mlewis
-     * @version March 16, 2020
+     * @version March 20, 2020
      *****************************************************************************************************************/
     public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
         private String networkResults;
-        ArrayList<Movie> moviesObject;
+        private ArrayList<Movie> moviesObject;
 
         @Override
         protected void onPreExecute() {
@@ -111,7 +110,6 @@ public class MovieRecyclerActivity extends AppCompatActivity {
 
             URL searchUrl = urls[0];
             networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-            Log.d(TAG, "Network result is: " + networkResults);
             try {
                 moviesObject = JsonUtils.parseMovieData(networkResults);
             } catch (JSONException e) {
@@ -132,7 +130,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Movie> moviesObject) {
             super.onPostExecute(moviesObject);
 
-            adapter = new MovieAdapter(moviesObject);
+            MovieAdapter adapter = new MovieAdapter(moviesObject);
 
             recyclerView.setAdapter(adapter);
             recyclerView.invalidate();
