@@ -42,9 +42,8 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
         recyclerView = findViewById(R.id.rv_movies);
-
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
-        //getUrlAndNetworkConnection();
+
         URL movieSearchUrl = NetworkUtils.UriBuilder(defaultQueryParam);
         new MovieDatabaseQueryTask().execute(movieSearchUrl);
     }
@@ -110,13 +109,11 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         protected ArrayList<Movie> doInBackground(URL... urls) {
             Log.d(TAG, "Background thread has started.");
 
-
             URL searchUrl = urls[0];
             networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             Log.d(TAG, "Network result is: " + networkResults);
             try {
                 moviesObject = JsonUtils.parseMovieData(networkResults);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -128,14 +125,14 @@ public class MovieRecyclerActivity extends AppCompatActivity {
          *  Executes on the main thread.
          * @param moviesObject
          *  An ArrayList<Movie> object
+         * @exception OutOfMemoryError
+         *  Indicates insufficient memory for this new Movie Adapter.
          */
         @Override
         protected void onPostExecute(ArrayList<Movie> moviesObject) {
             super.onPostExecute(moviesObject);
 
             adapter = new MovieAdapter(moviesObject);
-            int size = moviesObject.size();
-            Log.d(TAG, "size is: " + String.valueOf(size));
 
             recyclerView.setAdapter(adapter);
             recyclerView.invalidate();
