@@ -2,6 +2,7 @@ package com.projectpico.popularmovies;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +28,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     //  2. The class variable TAG is used for debugging purposes.
     private ArrayList<Movie> movieArrayList;
     private static final String TAG = MovieAdapter.class.getSimpleName();
+    private Listener listener;
+
+    interface Listener {
+        void onClick(int position);
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
 
     /**
      * public MovieAdapter(ArrayList<String> json)
@@ -51,8 +61,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        // FIXME: 3/19/20
-        return 0;
+        return movieArrayList.size();
     }
 
     /**
@@ -86,7 +95,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      *  The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
         Movie currentMovie = movieArrayList.get(position);
@@ -97,8 +106,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                 //.error()
                 .into(holder.imageView);
 
+        holder.cardView.setOnClickListener (new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onClick(position);
+                }
+            }
+        });
         Log.d(TAG, currentMovie.getPosterPath());
-        // FIXME: 3/18/20 use piccaso?
     }
 
     /******************************************************************************************************************
@@ -116,13 +132,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
          * public MovieViewHolder(CardView view)
          *  Initializes a custom ViewHolder, which describes an item view and metadata about its place within a
          *  RecyclerView.
+         * @param view
+         *  The view type that our ViewHolder contains.
          * @exception OutOfMemoryError
          *  Indicates insufficient memory for a new MovieViewHolder.
          */
         public ViewHolder(CardView view) {
             super(view);
-            cardView = view;
-            imageView = cardView.findViewById(R.id.rv_movies);
+            cardView = view.findViewById(R.id.cv_movies);
+            imageView = cardView.findViewById(R.id.info_image);
         }
     }
 }
