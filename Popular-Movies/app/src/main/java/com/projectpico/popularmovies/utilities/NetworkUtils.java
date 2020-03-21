@@ -26,7 +26,6 @@ public class NetworkUtils {
     //  1. The class variable SCHEME is used to build our uri which is used in our network request.
     //  2. The class variable AUTHORITY is used to build our uri which is used in our network request.
     //  3. THe class variable PATH is used to build our uri which is used in our network request.
-    //  4. The class variable
     //  5. The class variable TAG is used for debugging purposes.
     private static final String SCHEME = "https";
     private static final String AUTHORITY = "api.themoviedb.org";
@@ -34,7 +33,6 @@ public class NetworkUtils {
     private static final String PATH_TOP_RATED = "3/movie/top_rated";
     private static final String API_KEY = "api_key";
     private static final String API_VALUE = "f8c05a84150db926a13b793d60890bf4";
-    private static final String SORT_BY = "sort_by";
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
 
@@ -87,8 +85,6 @@ public class NetworkUtils {
      *  The url we are attempting to connect to and to ready data from.
      * @return String
      *  The input stream.
-     * @throws IOException
-     *  Indicates an I/O error has occurred while creating the input stream.
      */
     public static String getResponseFromHttpUrl(URL url) {
         Log.d(TAG, "Opening a url connection.");

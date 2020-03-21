@@ -2,8 +2,6 @@ package com.projectpico.popularmovies;
 
 import org.json.JSONObject;
 
-import java.util.List;
-
 /**********************************************************************************************************************
  * Builds a movie object.
  *
