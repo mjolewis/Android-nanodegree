@@ -2,11 +2,9 @@ package com.projectpico.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +27,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     public static final String EXTRA_MOVIE_PLOT = "plot";
 
     private static final String BASE_URL = "https://image.tmdb.org/t/p/w185";
-    private String fullUrl;
 
     private String poster;
     private String movieTitle;
@@ -54,7 +51,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         ImageView posterView = findViewById(R.id.iv_movie_poster);
-        fullUrl = BASE_URL + poster;
+        String fullUrl = BASE_URL + poster;
         Picasso.get()
                 .load(fullUrl)
                 //.placeholder()

@@ -28,8 +28,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     //  2. The class variable TAG is used for debugging purposes.
     private ArrayList<Movie> movieArrayList;
     private Callback activityCallback;
-    private String baseUrl = "https://image.tmdb.org/t/p/w185";
-    private String fullUrl;
+    private static final String BASE_URL = "https://image.tmdb.org/t/p/w185";
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
     /*
@@ -105,7 +104,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         Movie currentMovie = movieArrayList.get(position);
         holder.bind(currentMovie);
 
-        fullUrl = baseUrl + currentMovie.getPosterPath();
+        String fullUrl = BASE_URL + currentMovie.getPosterPath();
         Picasso.get()
                 .load(fullUrl)
                 //.placeholder()
@@ -123,7 +122,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * @version March 20, 2020
      *****************************************************************************************************************/
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private CardView cardView;
         private ImageView imageView;
         private String posterPath;
         private String movieTitle;
@@ -142,7 +140,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
          */
         public ViewHolder(CardView view) {
             super(view);
-            cardView = view.findViewById(R.id.cv_movies);
+            CardView cardView = view.findViewById(R.id.cv_movies);
             imageView = cardView.findViewById(R.id.info_image);
             imageView.setOnClickListener(this);
         }

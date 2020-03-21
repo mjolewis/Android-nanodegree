@@ -49,14 +49,14 @@ public class MovieRecyclerActivity extends AppCompatActivity implements MovieAda
         new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
 
-    /**
-     * public void getUrlAndNetworkConnection
+    /*
+     * private void getUrlAndNetworkConnection
      *  Builds a url that is passed to a background thread. The background thread processes a network requests to
      *  retrieve movie data via the tbmovie.org API.
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for this new background task.
      */
-    public void getUrlAndNetworkConnection() {
+    private void getUrlAndNetworkConnection() {
         URL movieSearchUrl = NetworkUtils.UriBuilder(path);
         new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
@@ -120,7 +120,6 @@ public class MovieRecyclerActivity extends AppCompatActivity implements MovieAda
      * @version March 20, 2020
      *****************************************************************************************************************/
     public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
-        private String networkResults;
         private ArrayList<Movie> moviesObject;
         private WeakReference<Context> context;
 
@@ -147,7 +146,7 @@ public class MovieRecyclerActivity extends AppCompatActivity implements MovieAda
             Log.d(TAG, "Background thread has started.");
 
             URL searchUrl = urls[0];
-            networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            String networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             try {
                 moviesObject = JsonUtils.parseMovieData(networkResults);
             } catch (JSONException e) {
