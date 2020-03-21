@@ -1,6 +1,6 @@
 package com.projectpico.popularmovies;
 
-import android.net.Uri;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**********************************************************************************************************************
@@ -29,17 +27,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     //  3. The instance variable listener listens for user clicks to activate the movie detail activity.
     //  2. The class variable TAG is used for debugging purposes.
     private ArrayList<Movie> movieArrayList;
-    private Listener listener;
+    private Callback activityCallback;
     private String baseUrl = "https://image.tmdb.org/t/p/w185";
     private String fullUrl;
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
-    interface Listener {
-        void onClick(int position);
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
+    /*
+    * Allows us to decouple the adapter from the intent to start a detail activity. This is a more modular approach
+    * allowing for adapter reuse.
+     */
+    interface Callback {
+        void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, String voteAverage,
+                             String moviePlot);
     }
 
     /**
@@ -52,8 +51,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for a new MovieAdapter.
      */
-    public MovieAdapter(ArrayList<Movie> movieArrayList) {
+    public MovieAdapter(Context activityContext, ArrayList<Movie> movieArrayList) {
         this.movieArrayList = movieArrayList;
+        activityCallback = (Callback) activityContext;
         Log.d(TAG, "New adapter constructed.");
     }
 
@@ -103,36 +103,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         Log.d(TAG, "Element " + position + " set.");
 
         Movie currentMovie = movieArrayList.get(position);
-
-//        Uri.Builder builder = new Uri.Builder();
-//        builder.scheme(SCHEME)
-//                .authority(AUTHORITY)
-//                .path(currentMovie.getPosterPath());
-//
-//        URL url = null;
-//        try {
-//            url = new URL(builder.toString());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
+        holder.bind(currentMovie);
 
         fullUrl = baseUrl + currentMovie.getPosterPath();
-        Log.d(TAG, "Poster path is: " + fullUrl);
-
         Picasso.get()
                 .load(fullUrl)
                 //.placeholder()
                 //.error()
                 .into(holder.imageView);
 
-        holder.cardView.setOnClickListener (new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null) {
-                    listener.onClick(position);
-                }
-            }
-        });
         Log.d(TAG, currentMovie.getPosterPath());
     }
 
@@ -141,16 +120,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * should subclass ViewHolder and add fields for caching potentially expensive View.findViewById(int) results.
      *
      * @author mlewis
-     * @version March 16, 2020
+     * @version March 20, 2020
      *****************************************************************************************************************/
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CardView cardView;
         private ImageView imageView;
+        private String posterPath;
+        private String movieTitle;
+        private String movieReleaseDate;
+        private String voteAverage;
+        private String moviePlot;
 
         /**
          * public MovieViewHolder(CardView view)
          *  Initializes a custom ViewHolder, which describes an item view and metadata about its place within a
-         *  RecyclerView.
+         *  RecyclerView. The view holder also registers a click listener for each view.
          * @param view
          *  The view type that our ViewHolder contains.
          * @exception OutOfMemoryError
@@ -160,6 +144,33 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             super(view);
             cardView = view.findViewById(R.id.cv_movies);
             imageView = cardView.findViewById(R.id.info_image);
+            imageView.setOnClickListener(this);
+        }
+
+        /**
+         * public void onClick(View v)
+         *  A click listener attached to each view within the recyclerview. Once a view is clicked, an explicit intent
+         *  will be created to start the MovieDetailActivity.
+         * @param v
+         *  The current view item.
+         */
+        @Override
+        public void onClick(View v) {
+            activityCallback.onMovieSelected(posterPath, movieTitle, movieReleaseDate, voteAverage, moviePlot);
+        }
+
+        /**
+         * public void bind(Movie currentMovie)
+         *  Extracts details from the movie object, which will be used as the params of our onClick listener.
+         * @param currentMovie
+         *  The movie in the current view.
+         */
+        public void bind(Movie currentMovie) {
+            posterPath = currentMovie.getPosterPath();
+            movieTitle = currentMovie.getTitle();
+            movieReleaseDate = currentMovie.getReleaseDate();
+            voteAverage = currentMovie.getVoteAverage();
+            moviePlot = currentMovie.getPlot();
         }
     }
 }
