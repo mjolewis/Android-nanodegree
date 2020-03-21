@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieRecyclerActivity extends AppCompatActivity implements MovieAdapter.Callback {
+public class MovieRecyclerActivity extends AppCompatActivity implements Callback {
     // Invariant of the MainActivity.java class
     //  1. The instance variable recyclerView is a reference to the a RecyclerView object that acts as a container
     //     for displaying movie data.

@@ -31,15 +31,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     private static final String BASE_URL = "https://image.tmdb.org/t/p/w185";
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
-    /*
-    * Allows us to decouple the adapter from the intent to start a detail activity. This is a more modular approach
-    * allowing for adapter reuse.
-     */
-    interface Callback {
-        void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, String voteAverage,
-                             String moviePlot);
-    }
-
     /**
      * public MovieAdapter(ArrayList<String> json)
      *  Initializes a custom Adapter, which provides a binding from our movies API data set to views that are displayed
