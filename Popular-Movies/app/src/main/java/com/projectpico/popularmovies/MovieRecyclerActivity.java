@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +18,11 @@ import com.projectpico.popularmovies.utilities.NetworkUtils;
 
 import org.json.JSONException;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieRecyclerActivity extends AppCompatActivity {
+public class MovieRecyclerActivity extends AppCompatActivity implements MovieAdapter.Callback {
     // Invariant of the MainActivity.java class
     //  1. The instance variable recyclerView is a reference to the a RecyclerView object that acts as a container
     //     for displaying movie data.
@@ -43,7 +46,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
 
         URL movieSearchUrl = NetworkUtils.UriBuilder(path);
-        new MovieDatabaseQueryTask().execute(movieSearchUrl);
+        new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
 
     /**
@@ -55,7 +58,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
      */
     public void getUrlAndNetworkConnection() {
         URL movieSearchUrl = NetworkUtils.UriBuilder(path);
-        new MovieDatabaseQueryTask().execute(movieSearchUrl);
+        new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
 
     /**
@@ -93,6 +96,22 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         Log.d(TAG, "Menu item " + title + " was clicked");
     }
 
+    @Override
+    public void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, String voteAverage,
+                                String moviePlot) {
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(MovieDetailActivity.EXTRA_POSTER_PATH, posterPath);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_TITLE, movieTitle);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_RELEASE_DATE, movieReleaseDate);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_VOTE_AVERAGE, voteAverage);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_PLOT, moviePlot);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     /******************************************************************************************************************
      * The ApiRequest class extends AsyncTask to perform a network request on a background thread. The results on the
      * network request are then published on our UI thread.
@@ -103,6 +122,19 @@ public class MovieRecyclerActivity extends AppCompatActivity {
     public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
         private String networkResults;
         private ArrayList<Movie> moviesObject;
+        private WeakReference<Context> context;
+
+        /**
+         * public MovieDatabaseQueryTask(Context context)
+         *  Initializes a new MovieDatabaseQueryTask
+         * @param context
+         *  The context of the parent thread.
+         * @exception OutOfMemoryError
+         *  Indicates insufficient memory for the weak reference.
+         */
+        public MovieDatabaseQueryTask(Context context) {
+            this.context = new WeakReference<>(context);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -136,8 +168,7 @@ public class MovieRecyclerActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Movie> moviesObject) {
             super.onPostExecute(moviesObject);
 
-            MovieAdapter adapter = new MovieAdapter(moviesObject);
-
+            MovieAdapter adapter = new MovieAdapter(context.get(), moviesObject);
             recyclerView.setAdapter(adapter);
             recyclerView.invalidate();
         }
