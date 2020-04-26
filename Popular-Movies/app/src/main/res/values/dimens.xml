@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines -->
+    <dimen name="horizontal_padding">32dp</dimen>
+    <dimen name="vertical_padding">16dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="vertical_margin">16dp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="movie_icon_height">192dp</dimen>
+    <dimen name="movie_icon_width">136dp</dimen>
+    <dimen name="play_button_icon">40dp</dimen>
+    <dimen name="favorite_button_icon">40dp</dimen>
+
+
+    <!-- Movie Detail dimensions -->
+    <dimen name="title_detail_vertical_height">96dp</dimen>
+
+</resources>

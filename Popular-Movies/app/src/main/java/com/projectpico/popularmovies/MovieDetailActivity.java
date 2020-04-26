@@ -8,6 +8,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**********************************************************************************************************************
  * The MovieDetailActivity is responsible for displaying content for an individual movie. The content displayed
  * includes the movie poster, title, release date, rating, and plot summary.
@@ -18,13 +23,15 @@ import com.squareup.picasso.Picasso;
  *
  * @author mlewis
  * @version March 21, 2020
- */
+ *********************************************************************************************************************/
 public class MovieDetailActivity extends AppCompatActivity {
     public static final String EXTRA_POSTER_PATH = "posterPath";
     public static final String EXTRA_MOVIE_TITLE = "title";
     public static final String EXTRA_MOVIE_RELEASE_DATE = "releaseDate";
     public static final String EXTRA_MOVIE_VOTE_AVERAGE = "voteAverage";
     public static final String EXTRA_MOVIE_PLOT = "plot";
+    private static final String MAX_RATING = "/10";
+
 
     private static final String BASE_URL = "https://image.tmdb.org/t/p/w185";
 
@@ -47,9 +54,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             releaseDate = bundle.getString(EXTRA_MOVIE_RELEASE_DATE);
             voteAverage = bundle.getString(EXTRA_MOVIE_VOTE_AVERAGE);
             plot = bundle.getString(EXTRA_MOVIE_PLOT);
-
         }
 
+        /* Use Picasso to get the movie poster and place it into the UI */
         ImageView posterView = findViewById(R.id.iv_movie_poster);
         String fullUrl = BASE_URL + poster;
         Picasso.get()
@@ -58,31 +65,20 @@ public class MovieDetailActivity extends AppCompatActivity {
                 //.error()
                 .into(posterView);
 
-        // Set the header and content for the title
-        TextView titleTag = findViewById(R.id.tv_movie_title_tag);
-        titleTag.setText(titleTag.getText());
-
+        /* Place the movie title into the UI */
         TextView titleView = findViewById(R.id.tv_movie_title);
         titleView.setText(movieTitle);
 
-        // Set the header and content for the release date
-        TextView releaseDateTag = findViewById(R.id.tv_movie_release_date_tag);
-        releaseDateTag.setText(releaseDateTag.getText());
-
+        /* Add the release date (in YYYY format) into the UI */
+        String year = releaseDate.substring(0, 4);
         TextView releaseDateView = findViewById(R.id.tv_movie_release_date);
-        releaseDateView.setText(releaseDate);
+        releaseDateView.setText(year);
 
-        // Set the header and content for the movie rating
-        TextView ratingTag = findViewById(R.id.tv_movie_vote_average_tag);
-        ratingTag.setText(ratingTag.getText());
-
+        /* Add the the movie rating into the UI */
         TextView voteView = findViewById(R.id.tv_movie_vote_average);
-        voteView.setText(voteAverage);
+        voteView.setText(getString(R.string.movie_max_rating, voteAverage));
 
-        // Set the header and content for the plot
-        TextView plotTag = findViewById(R.id.tv_movie_plot_tag);
-        plotTag.setText(plotTag.getText());
-
+        /* Add the plot into the UI */
         TextView plotView = findViewById(R.id.tv_movie_plot);
         plotView.setText(plot);
     }
