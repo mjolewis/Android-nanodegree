@@ -32,7 +32,7 @@ public class NetworkUtils {
     private static final String PATH_POPULAR = "3/movie/popular";
     private static final String PATH_TOP_RATED = "3/movie/top_rated";
     private static final String API_KEY = "api_key";
-    private static final String API_VALUE = "";
+    private static final String API_VALUE = "f8c05a84150db926a13b793d60890bf4";
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
 

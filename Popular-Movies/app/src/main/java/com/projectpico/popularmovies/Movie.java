@@ -10,7 +10,7 @@ import org.json.JSONObject;
  *********************************************************************************************************************/
 public class Movie {
     // Invariant of the Movie.java class
-    //  1. The instance variables describe metadata about each movie object.
+    //  1. The instance variables are references to important metadata about each movie object.
     private String title;
     private String releaseDate;
     private String posterPath;
