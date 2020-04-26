@@ -42,7 +42,8 @@ public class JsonUtils {
         JSONObject apiResults = new JSONObject(jsonString);
 
         /* The movie results are in a child array called "results". This array contains multiple JSON "movieObjects"
-         * that we iterate through while building new movie objects to add to our ArrayList
+         * that we iterate through to build new movie objects.
+         * The new movie objects are added to an ArrayList, which gets returned to the caller.
          */
         JSONArray resultsArray = apiResults.optJSONArray(RESULTS);
         if (resultsArray != null) {

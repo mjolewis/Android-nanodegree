@@ -7,10 +7,10 @@ import android.os.Bundle;
 
 /**********************************************************************************************************************
  * The MainActivity is the entry point for the Popular Movie application. It's sole purpose is to send an intent to our
- * MovieDisplay activity.
+ * MovieRecyclerActivity.
  *
  * @author mlewis
- * @version March 16, 2020
+ * @version April 20, 2020
  *********************************************************************************************************************/
 public class MainActivity extends AppCompatActivity {
 

@@ -22,19 +22,29 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**********************************************************************************************************************
+ * The top level UI.
+ *
+ * @author mlewis
+ * @version April 26, 2020
+ *********************************************************************************************************************/
 public class MovieRecyclerActivity extends AppCompatActivity implements Callback {
     // Invariant of the MainActivity.java class
     //  1. The instance variable recyclerView is a reference to the a RecyclerView object that acts as a container
     //     for displaying movie data.
-    //  2. The instance variable defaultQueryParam refers to the type of movies the user wants to query.
-    //  3. The class variable SPAN_COUNT indicates the number of columns created by the GridLayoutManager.
-    //  4. The class variables POPULAR_MOVIES and TOP_RATED_MOVIES refer to the query options provided to the user and
-    //     that are used in our tbmovie.org API request.
-    //  5. The class variable TAG is used for debugging purposes.
+    //  2. The instance variable defaultPath is the default path used in the webservice request.
+    //  3. The class variable PATH_POPULAR is a reference to the popular movie path from
+    //     {https://www.themoviedb.org/?_dc=1584461074}. This is used to fetch popular movies.
+    //  4. The class variable PATH_TOP_RATE is a reference to the top rated movie path from
+    //     {https://www.themoviedb.org/?_dc=1584461074}. This is used to fetch top rated movies.
+    //  5. THe class variable FAVORITES is a reference to the users favorite movies.
+    //  6. The class variable SPAN_COUNT indicates the number of columns created by the GridLayoutManager.
+    //  7. The class variable TAG is used for debugging purposes.
     private static RecyclerView recyclerView;
-    private static String path = "3/movie/popular";
+    private static String defaultPath = "3/movie/popular";
     private static final String PATH_POPULAR = "3/movie/popular";
     private static final String PATH_TOP_RATED = "3/movie/top_rated";
+    //private static final String FAVORITES = "test";
     private static final int SPAN_COUNT = 2;
     private static final String TAG = MovieRecyclerActivity.class.getSimpleName();
 
@@ -45,7 +55,7 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
 
-        URL movieSearchUrl = NetworkUtils.UriBuilder(path);
+        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
         new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
 
@@ -57,7 +67,7 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
      *  Indicates insufficient memory for this new background task.
      */
     private void getUrlAndNetworkConnection() {
-        URL movieSearchUrl = NetworkUtils.UriBuilder(path);
+        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
         new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
 
@@ -87,9 +97,9 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
         String title = (String) item.getTitle();
 
         if (id == R.id.menu_most_popular_movie) {
-            path = PATH_POPULAR;
+            defaultPath = PATH_POPULAR;
         } else if (id == R.id.menu_highest_rated) {
-            path = PATH_TOP_RATED;
+            defaultPath = PATH_TOP_RATED;
         }
 
         getUrlAndNetworkConnection();
