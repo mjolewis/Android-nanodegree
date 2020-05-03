@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycler_view);
+        setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.rv_movies);
 
         /* Get a ViewModel and scope it to this activity's lifecycle */

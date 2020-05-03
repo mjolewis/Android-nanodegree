@@ -11,7 +11,7 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <!-- Movie detail title styles -->
-    <style name="AppTheme.DetailTitle" parent="@style/TextAppearance.AppCompat.Headline">
+    <style name="AppTheme.DetailTitle" parent="@style/TextAppearance.AppCompat.Display2">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/title_detail_vertical_height</item>
         <item name="android:gravity">center_vertical</item>
