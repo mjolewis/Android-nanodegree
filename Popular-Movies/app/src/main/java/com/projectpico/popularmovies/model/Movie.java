@@ -3,7 +3,8 @@ package com.projectpico.popularmovies.model;
 import java.util.List;
 
 /**********************************************************************************************************************
- * A POJO that stores the value of each JSON object from themoviedb.org service request.
+ * A model used to generate a POJO from the JSON string provided by the GET request in our MovieClient. This POJO
+ * represents the model from themoviedb.org
  *
  * @author mlewis
  * @version May 2, 2020

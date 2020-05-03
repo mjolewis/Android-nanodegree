@@ -17,7 +17,7 @@ import com.projectpico.popularmovies.repo.MovieRepository;
  *********************************************************************************************************************/
 public class MovieViewModel extends ViewModel {
 
-    private MutableLiveData<Movie> movieModelMutableLiveData;
+    private MutableLiveData<Movie> movieMutableLiveData;
     private MovieRepository movieRepository;
 
     /**
@@ -29,9 +29,9 @@ public class MovieViewModel extends ViewModel {
     public MovieViewModel() { }
 
     public void init(String path, String key) {
-        if (movieModelMutableLiveData != null) { }
+        if (movieMutableLiveData != null) { }
         movieRepository = MovieRepository.getInstance();
-        movieModelMutableLiveData = movieRepository.getMovies(path, key);
+        movieMutableLiveData = movieRepository.getMovies(path, key);
     }
 
     /**
@@ -41,6 +41,6 @@ public class MovieViewModel extends ViewModel {
      *  A list of movies that can be observed by our UI controller.
      */
     public LiveData<Movie> getMovieRepository() {
-        return movieModelMutableLiveData;
+        return movieMutableLiveData;
     }
 }

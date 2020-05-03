@@ -10,4 +10,5 @@
     <string name="favorite_button">MARK AS FAVORITE</string>
     <string name="trailer">Trailers:</string>
     <string name="favorite_movies">Favorites</string>
+    <string name="detail_activity_name">Movie Detail</string>
 </resources>

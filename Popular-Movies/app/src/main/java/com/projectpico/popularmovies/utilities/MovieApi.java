@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**********************************************************************************************************************
- * An interface for our moviedb.org API request.
+ * An interface for our themoviedb.org API request.
  *
  * @author mlewis
  * @version May 2, 2020
