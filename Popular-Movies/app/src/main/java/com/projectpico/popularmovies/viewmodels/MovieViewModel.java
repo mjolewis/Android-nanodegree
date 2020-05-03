@@ -28,10 +28,14 @@ public class MovieViewModel extends ViewModel {
      */
     public MovieViewModel() { }
 
-    public void init(String path, String key) {
-        if (movieMutableLiveData != null) { }
+    public void initPopularMovies(String key) {
         movieRepository = MovieRepository.getInstance();
-        movieMutableLiveData = movieRepository.getMovies(path, key);
+        movieMutableLiveData = movieRepository.getPopularMovies(key);
+    }
+
+    public void initTopRatedMovies(String key) {
+        movieRepository = MovieRepository.getInstance();
+        movieMutableLiveData = movieRepository.getPopularMovies(key);
     }
 
     /**

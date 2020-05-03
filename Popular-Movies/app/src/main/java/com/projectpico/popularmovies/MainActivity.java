@@ -36,11 +36,6 @@ public class MainActivity extends AppCompatActivity implements Callback {
     //     for displaying movie data.
     //  4. The instance variable movieList is a reference to the MutableLiveData object which holds the list of movies
     //     returned from the RESTful client.
-    //  5. The instance variable defaultPath is the default path used in the webservice request.
-    //  6. The class variable PATH_POPULAR is a reference to the popular movie path from
-    //     {https://www.themoviedb.org/?_dc=1584461074}. This is used to fetch popular movies.
-    //  7. The class variable PATH_TOP_RATE is a reference to the top rated movie path from
-    //     {https://www.themoviedb.org/?_dc=1584461074}. This is used to fetch top rated movies.
     //  8. The class variable API_KEY must be provided by the developer. It allows us to access themoviedb.org API.
     //  9. The class variable FAVORITES is a reference to the users favorite movies.
     //  10. The class variable SPAN_COUNT indicates the number of columns created by the GridLayoutManager.
@@ -49,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements Callback {
     private MovieViewModel movieViewModel;
     private static RecyclerView recyclerView;
     private List<Movie.Results> movieList = new ArrayList<>();
-    private static String defaultPath = "popular";
-    private static final String PATH_POPULAR = "popular";
-    private static final String PATH_TOP_RATED = "top_rated";
     private static final String API_KEY = "f8c05a84150db926a13b793d60890bf4";
     private static final int SPAN_COUNT = 2;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -66,12 +58,13 @@ public class MainActivity extends AppCompatActivity implements Callback {
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
 
         /* Create an instance of the MovieRepository, which provides a MutableLiveData data holder */
-        movieViewModel.init(defaultPath, API_KEY);
+        movieViewModel.initPopularMovies(API_KEY);
 
         /* Create the observer to update the UI */
         Observer<Movie> movieObserver = new Observer<Movie>() {
             @Override
             public void onChanged(Movie movies) {
+                System.out.println("GOT HERE NOWOWOWOWOW");
                 List<Movie.Results> movieResults = movies.getResults();
                 movieList.addAll(movieResults);
                 movieAdapter.notifyDataSetChanged();
@@ -110,13 +103,12 @@ public class MainActivity extends AppCompatActivity implements Callback {
         String title = (String) item.getTitle();
 
         if (id == R.id.menu_most_popular_movie) {
-            defaultPath = PATH_POPULAR;
+            movieViewModel.initPopularMovies(API_KEY);
         } else if (id == R.id.menu_highest_rated) {
-            defaultPath = PATH_TOP_RATED;
+            movieViewModel.initTopRatedMovies(API_KEY);
         }
 
-        /* Get an instance of the MovieRepository, which provides a MutableLiveData data holder */
-        movieViewModel.init(defaultPath, API_KEY);
+        setupRecyclerView();
         Log.d(TAG, "Menu item " + title + " was clicked");
     }
 

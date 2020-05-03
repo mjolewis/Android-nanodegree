@@ -13,7 +13,7 @@
     <color name="colorWhite">#FFFFFF</color>
 
     <!-- Divider colors -->
-    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDividerLine">#BDBDBD</color>
 
     <!-- Icon colors -->
     <color name="colorIcon">#FFFFFF</color>

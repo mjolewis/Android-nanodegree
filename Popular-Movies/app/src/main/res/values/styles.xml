@@ -13,10 +13,42 @@
     <!-- Movie detail title styles -->
     <style name="AppTheme.DetailTitle" parent="@style/TextAppearance.AppCompat.Display2">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/title_detail_vertical_height</item>
+        <item name="android:layout_height">@dimen/title_detail_height</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:paddingStart">@dimen/horizontal_padding</item>
+    </style>
+
+    <style name="ItemCardView" parent="CardView">
+        <item name="cardElevation">2dp</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="MovieTitle">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MovieRating">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="MovieDate">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
+    <style name="MovieItemLabel">
+        <item name="android:textColor">@color/colorDarkGrey</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MovieItemValue">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
     </style>
 
 </resources>

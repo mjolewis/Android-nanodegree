@@ -66,8 +66,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .into(posterView);
 
         /* Place the movie title into the UI */
-        TextView titleView = findViewById(R.id.tv_movie_title);
-        titleView.setText(movieTitle);
+        ImageView titleView = findViewById(R.id.iv_movie_backdrop);
+        Picasso.get()
+                .load(fullUrl)
+                .into(titleView);
+//        titleView.setText(movieTitle);
 
         /* Add the release date (in YYYY format) into the UI */
         String year = releaseDate.substring(0, 4);
