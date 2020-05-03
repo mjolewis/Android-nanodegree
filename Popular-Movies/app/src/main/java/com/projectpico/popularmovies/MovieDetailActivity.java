@@ -38,7 +38,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String poster;
     private String movieTitle;
     private String releaseDate;
-    private String voteAverage;
+    private double voteAverage;
     private String plot;
 
     @Override
@@ -52,7 +52,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             poster = bundle.getString(EXTRA_POSTER_PATH);
             movieTitle = bundle.getString(EXTRA_MOVIE_TITLE);
             releaseDate = bundle.getString(EXTRA_MOVIE_RELEASE_DATE);
-            voteAverage = bundle.getString(EXTRA_MOVIE_VOTE_AVERAGE);
+            voteAverage = bundle.getDouble(EXTRA_MOVIE_VOTE_AVERAGE);
             plot = bundle.getString(EXTRA_MOVIE_PLOT);
         }
 
@@ -76,7 +76,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         /* Add the the movie rating into the UI */
         TextView voteView = findViewById(R.id.tv_movie_vote_average);
-        voteView.setText(getString(R.string.movie_max_rating, voteAverage));
+        String score = voteAverage + MAX_RATING;
+        voteView.setText(score);
 
         /* Add the plot into the UI */
         TextView plotView = findViewById(R.id.tv_movie_plot);

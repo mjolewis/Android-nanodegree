@@ -10,5 +10,4 @@
     <string name="favorite_button">MARK AS FAVORITE</string>
     <string name="trailer">Trailers:</string>
     <string name="favorite_movies">Favorites</string>
-    <string name="movie_max_rating">%1$s/10</string>
 </resources>

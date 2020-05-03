@@ -3,25 +3,22 @@ package com.projectpico.popularmovies.utilities;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
-import com.projectpico.popularmovies.model.MovieModel;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**********************************************************************************************************************
- * A POJO used to map the movie keys to a list of Movie objects.
+ * Creates a type-safe HTTP client using Retrofit with a custom Gson parser instance.
  *
  * @author mlewis
- * @version May 2, 2020
+ * @version May 3, 2020
  *********************************************************************************************************************/
 public class MovieClient {
     // Invariant of the MovieResponse.java class
-    // 1. The instance variable movies is a list of movies that the API responds with.
-    // 2. The class variable DATE_FORMAT is used to map the date data directly from a String to a Date object.
+    // 1. The class variable DATE_FORMAT is used to map the date data directly from a String to a Date object.
+    // 2. The class variable BASE_URL is used by the MovieApi when retrieving data from a REST api.
+    // 3. The class variable retrofit is a reference to a type-safe HTTP client.
     // 3. The class variable TAG is used for logging.
-    @SerializedName("results")
-    private MovieModel movies;
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String BASE_URL = "https://api.themoviedb.org/";
     private static Retrofit retrofit;
