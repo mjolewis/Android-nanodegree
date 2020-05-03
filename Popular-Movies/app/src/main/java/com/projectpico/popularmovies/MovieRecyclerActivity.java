@@ -3,6 +3,7 @@ package com.projectpico.popularmovies;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.projectpico.popularmovies.utilities.MovieClient;
-import com.projectpico.popularmovies.viewmodel.MovieViewModel;
+import com.projectpico.popularmovies.adapters.MovieAdapter;
+import com.projectpico.popularmovies.model.Movie;
+import com.projectpico.popularmovies.viewmodels.MovieViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**********************************************************************************************************************
@@ -36,65 +39,54 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
     //  5. THe class variable FAVORITES is a reference to the users favorite movies.
     //  6. The class variable SPAN_COUNT indicates the number of columns created by the GridLayoutManager.
     //  7. The class variable TAG is used for debugging purposes.
+    private static MovieAdapter movieAdapter;
+    private MovieViewModel movieViewModel;
     private static RecyclerView recyclerView;
+
+    List<Movie.Results> movieList = new ArrayList<>();
+
     private static String defaultPath = "popular";
     private static final String PATH_POPULAR = "popular";
     private static final String PATH_TOP_RATED = "top_rated";
-    //private static final String FAVORITES = "test";
-    private MovieViewModel movieViewModel;
+    private static final String API_KEY = "f8c05a84150db926a13b793d60890bf4";
     private static final int SPAN_COUNT = 2;
-    private MovieClient movieClient;
     private static final String TAG = MovieRecyclerActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
-
         recyclerView = findViewById(R.id.rv_movies);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
 
-        //URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
-
-        /* Get the ViewModel */
+        /* Get a ViewModel and scope it to this activity's lifecycle */
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
 
+        /* Get an instance of the MovieRepository, which provides a MutableLiveData data holder */
+        movieViewModel.init(defaultPath, API_KEY);
+
         /* Create the observer to update the UI */
-        final Observer<List> movieObserver = new Observer<List>() {
+        Observer<Movie> movieObserver = new Observer<Movie>() {
             @Override
-            public void onChanged(List list) {
-                System.out.println("GOT HEREEEEEE");
-                MovieAdapter adapter = new MovieAdapter(getApplicationContext(), list);
-                recyclerView.setAdapter(adapter);
-                recyclerView.invalidate();
+            public void onChanged(Movie movieModel) {
+                List<Movie.Results> movieResults = movieModel.getResults();
+                movieList.addAll(movieResults);
+                movieAdapter.notifyDataSetChanged();
             }
         };
-        /* Observe the LiveData, passing in this activity as the LifeCycleOwner and the observer */
-        movieViewModel.getMovieList(defaultPath).observe(this, movieObserver);
 
+        /* Start observing the LiveData data holder in the ViewModel and use the data in the onChanged method */
+        movieViewModel.getMovieRepository().observe(this, movieObserver);
 
-        //new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
+        setupRecyclerView();
     }
-
-    /*
-     * private void getUrlAndNetworkConnection
-     *  Builds a url that is passed to a background thread. The background thread processes a network requests to
-     *  retrieve movie data via the tbmovie.org API.
-     * @exception OutOfMemoryError
-     *  Indicates insufficient memory for this new background task.
-     */
-//    private void getUrlAndNetworkConnection() {
-//        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
-//        new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
-//    }
 
     /**
      * public boolean onCreateOptionsMenu(Menu menu)
-     *  Inflates the menu item.
-     * @param menu
-     *  The menu item to inflate
+     * Inflates the menu item.
+     *
+     * @param menu The menu item to inflate
      * @return boolean
-     *  True if menu was created. False otherwise.
+     * True if menu was created. False otherwise.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,9 +97,9 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
 
     /**
      * public void onMenuQuerySelected(MenuItem item)
-     *  Captures the type of query the user wants to use in the API request.
-     * @param item
-     *  The MenuItem that the user selected. Indicates the type of movie the user wants to search for.
+     * Captures the type of query the user wants to use in the API request.
+     *
+     * @param item The MenuItem that the user selected. Indicates the type of movie the user wants to search for.
      */
     public void onMenuQuerySelected(MenuItem item) {
         int id = item.getItemId();
@@ -119,8 +111,8 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
             defaultPath = PATH_TOP_RATED;
         }
 
-        movieClient.setPath(defaultPath);
-        //getUrlAndNetworkConnection();
+        /* Get an instance of the MovieRepository, which provides a MutableLiveData data holder */
+        movieViewModel.init(defaultPath, API_KEY);
         Log.d(TAG, "Menu item " + title + " was clicked");
     }
 
@@ -140,65 +132,17 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
         startActivity(intent);
     }
 
-//    /******************************************************************************************************************
-//     * The ApiRequest class extends AsyncTask to perform a network request on a background thread. The results on the
-//     * network request are then published on our UI thread.
-//     *
-//     * @author mlewis
-//     * @version March 20, 2020
-//     *****************************************************************************************************************/
-//    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
-//        private ArrayList<Movie> moviesObject;
-//        private WeakReference<Context> context;
-//
-//        /**
-//         * public MovieDatabaseQueryTask(Context context)
-//         *  Initializes a new MovieDatabaseQueryTask
-//         * @param context
-//         *  The context of the parent thread.
-//         * @exception OutOfMemoryError
-//         *  Indicates insufficient memory for the weak reference.
-//         */
-//        public MovieDatabaseQueryTask(Context context) {
-//            this.context = new WeakReference<>(context);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            Log.d(TAG, "AsyncTask has started working.");
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected ArrayList<Movie> doInBackground(URL... urls) {
-//            Log.d(TAG, "Background thread has started.");
-//
-//            URL searchUrl = urls[0];
-//            System.out.println("SEARCH URL IS: " + searchUrl);
-//            String networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-//            try {
-//                moviesObject = JsonUtils.parseMovieData(networkResults);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            return moviesObject;
-//        }
-//
-//        /**
-//         * protected void onPostExecute
-//         *  Executes on the main thread.
-//         * @param moviesObject
-//         *  An ArrayList<Movie> object
-//         * @exception OutOfMemoryError
-//         *  Indicates insufficient memory for this new Movie Adapter.
-//         */
-//        @Override
-//        protected void onPostExecute(ArrayList<Movie> moviesObject) {
-//            super.onPostExecute(moviesObject);
-//
-//            MovieAdapter adapter = new MovieAdapter(context.get(), moviesObject);
-//            recyclerView.setAdapter(adapter);
-//            recyclerView.invalidate();
-//        }
-//    }
+    /* Helper method to construct a RecyclerView */
+    private void setupRecyclerView() {
+        if (movieAdapter == null) {
+            movieAdapter = new MovieAdapter(MovieRecyclerActivity.this, movieList);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
+            recyclerView.setAdapter(movieAdapter);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setNestedScrollingEnabled(true);
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
+            recyclerView.setAdapter(movieAdapter);
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package com.projectpico.popularmovies.utilities;
 
-import com.projectpico.popularmovies.model.MovieModel;
+import com.projectpico.popularmovies.model.Movie;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface MovieApi {
 
     @GET("3/movie/{path}")
-    Call<MovieModel> getMovies(
+    Call<Movie> getMovies(
             @Path("path") String path,
             @Query("api_key") String apiKey);
 }

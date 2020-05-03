@@ -1,4 +1,4 @@
-package com.projectpico.popularmovies;
+package com.projectpico.popularmovies.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.projectpico.popularmovies.model.MovieModel;
+import com.projectpico.popularmovies.Callback;
+import com.projectpico.popularmovies.R;
+import com.projectpico.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     //  1. The instance variable movieArrayList is a list of move objects with the associated meta data for each move.
     //  3. The instance variable listener listens for user clicks to activate the movie detail activity.
     //  2. The class variable TAG is used for debugging purposes.
-    private List<MovieModel> movieList;
+    private List<Movie.Results> movieList;
     private Context context;
     private Callback activityCallback;
     private static final String BASE_URL = "https://image.tmdb.org/t/p/w185";
@@ -43,7 +45,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for a new MovieAdapter.
      */
-    public MovieAdapter(Context context, List<MovieModel> movieList) {
+    public MovieAdapter(Context context, List<Movie.Results> movieList) {
         this.movieList = movieList;
         activityCallback = (Callback) context;
         Log.d(TAG, "New adapter constructed.");
@@ -94,17 +96,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        MovieModel currentMovie = movieList.get(position);
-        holder.bind(currentMovie.getResults());
+        Movie.Results currentMovie = movieList.get(position);
+        holder.bind(currentMovie);
 
-        String fullUrl = BASE_URL + currentMovie.getResults().getPosterPath();
+        String fullUrl = BASE_URL + currentMovie.getPosterPath();
         Picasso.get()
                 .load(fullUrl)
                 //.placeholder()
                 //.error()
                 .into(holder.imageView);
 
-        Log.d(TAG, currentMovie.getResults().getPosterPath());
+        Log.d(TAG, currentMovie.getPosterPath());
     }
 
     /******************************************************************************************************************
@@ -156,7 +158,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
          * @param currentMovie
          *  The movie in the current view.
          */
-        public void bind(MovieModel.Results currentMovie) {
+        public void bind(Movie.Results currentMovie) {
             posterPath = currentMovie.getPosterPath();
             movieTitle = currentMovie.getTitle();
             movieReleaseDate = currentMovie.getReleaseDate();
