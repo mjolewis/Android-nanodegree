@@ -14,6 +14,6 @@
 
 
     <!-- Movie Detail dimensions -->
-    <dimen name="title_detail_vertical_height">96dp</dimen>
+    <dimen name="title_detail_vertical_height">124dp</dimen>
 
 </resources>

@@ -53,19 +53,6 @@
         android:layout_marginTop="@dimen/vertical_margin"
         app:layout_constraintTop_toBottomOf="@+id/tv_movie_title" />
 
-    <!-- Running Time -->
-    <TextView
-        android:id="@+id/tv_movie_length"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorSecondaryText"
-        tools:text="120min"
-        android:layout_marginTop="@dimen/vertical_margin"
-        app:layout_constraintStart_toStartOf="@+id/tv_movie_release_date"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_release_date" />
-
     <!-- Viewer rating -->
     <TextView
         android:id="@+id/tv_movie_vote_average"
@@ -76,8 +63,8 @@
         android:textColor="@color/colorPrimaryText"
         android:fontFamily="sans-serif"
         tools:text="8.1/10"
-        app:layout_constraintStart_toStartOf="@+id/tv_movie_length"
-        app:layout_constraintTop_toBottomOf="@+id/tv_movie_length" />
+        app:layout_constraintStart_toStartOf="@+id/tv_movie_release_date"
+        app:layout_constraintTop_toBottomOf="@+id/tv_movie_release_date" />
 
     <!-- Mark movie as a favorite -->
     <Button
