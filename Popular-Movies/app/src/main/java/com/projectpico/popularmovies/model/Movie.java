@@ -1,4 +1,4 @@
-package com.projectpico.popularmovies;
+package com.projectpico.popularmovies.model;
 
 import org.json.JSONObject;
 

@@ -1,26 +1,22 @@
 package com.projectpico.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.projectpico.popularmovies.utilities.JsonUtils;
-import com.projectpico.popularmovies.utilities.NetworkUtils;
+import com.projectpico.popularmovies.utilities.MovieClient;
+import com.projectpico.popularmovies.viewmodel.MovieViewModel;
 
-import org.json.JSONException;
-
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 /**********************************************************************************************************************
  * The top level UI.
@@ -41,22 +37,43 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
     //  6. The class variable SPAN_COUNT indicates the number of columns created by the GridLayoutManager.
     //  7. The class variable TAG is used for debugging purposes.
     private static RecyclerView recyclerView;
-    private static String defaultPath = "3/movie/popular";
-    private static final String PATH_POPULAR = "3/movie/popular";
-    private static final String PATH_TOP_RATED = "3/movie/top_rated";
+    private static String defaultPath = "popular";
+    private static final String PATH_POPULAR = "popular";
+    private static final String PATH_TOP_RATED = "top_rated";
     //private static final String FAVORITES = "test";
+    private MovieViewModel movieViewModel;
     private static final int SPAN_COUNT = 2;
+    private MovieClient movieClient;
     private static final String TAG = MovieRecyclerActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
+
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT));
 
-        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
-        new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
+        //URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
+
+        /* Get the ViewModel */
+        movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+
+        /* Create the observer to update the UI */
+        final Observer<List> movieObserver = new Observer<List>() {
+            @Override
+            public void onChanged(List list) {
+                System.out.println("GOT HEREEEEEE");
+                MovieAdapter adapter = new MovieAdapter(getApplicationContext(), list);
+                recyclerView.setAdapter(adapter);
+                recyclerView.invalidate();
+            }
+        };
+        /* Observe the LiveData, passing in this activity as the LifeCycleOwner and the observer */
+        movieViewModel.getMovieList(defaultPath).observe(this, movieObserver);
+
+
+        //new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
     }
 
     /*
@@ -66,10 +83,10 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for this new background task.
      */
-    private void getUrlAndNetworkConnection() {
-        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
-        new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
-    }
+//    private void getUrlAndNetworkConnection() {
+//        URL movieSearchUrl = NetworkUtils.UriBuilder(defaultPath);
+//        new MovieDatabaseQueryTask(this).execute(movieSearchUrl);
+//    }
 
     /**
      * public boolean onCreateOptionsMenu(Menu menu)
@@ -102,12 +119,13 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
             defaultPath = PATH_TOP_RATED;
         }
 
-        getUrlAndNetworkConnection();
+        movieClient.setPath(defaultPath);
+        //getUrlAndNetworkConnection();
         Log.d(TAG, "Menu item " + title + " was clicked");
     }
 
     @Override
-    public void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, String voteAverage,
+    public void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, double voteAverage,
                                 String moviePlot) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
 
@@ -115,71 +133,72 @@ public class MovieRecyclerActivity extends AppCompatActivity implements Callback
         bundle.putString(MovieDetailActivity.EXTRA_POSTER_PATH, posterPath);
         bundle.putString(MovieDetailActivity.EXTRA_MOVIE_TITLE, movieTitle);
         bundle.putString(MovieDetailActivity.EXTRA_MOVIE_RELEASE_DATE, movieReleaseDate);
-        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_VOTE_AVERAGE, voteAverage);
+        bundle.putDouble(MovieDetailActivity.EXTRA_MOVIE_VOTE_AVERAGE, voteAverage);
         bundle.putString(MovieDetailActivity.EXTRA_MOVIE_PLOT, moviePlot);
 
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
-    /******************************************************************************************************************
-     * The ApiRequest class extends AsyncTask to perform a network request on a background thread. The results on the
-     * network request are then published on our UI thread.
-     *
-     * @author mlewis
-     * @version March 20, 2020
-     *****************************************************************************************************************/
-    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
-        private ArrayList<Movie> moviesObject;
-        private WeakReference<Context> context;
-
-        /**
-         * public MovieDatabaseQueryTask(Context context)
-         *  Initializes a new MovieDatabaseQueryTask
-         * @param context
-         *  The context of the parent thread.
-         * @exception OutOfMemoryError
-         *  Indicates insufficient memory for the weak reference.
-         */
-        public MovieDatabaseQueryTask(Context context) {
-            this.context = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Log.d(TAG, "AsyncTask has started working.");
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Movie> doInBackground(URL... urls) {
-            Log.d(TAG, "Background thread has started.");
-
-            URL searchUrl = urls[0];
-            String networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-            try {
-                moviesObject = JsonUtils.parseMovieData(networkResults);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return moviesObject;
-        }
-
-        /**
-         * protected void onPostExecute
-         *  Executes on the main thread.
-         * @param moviesObject
-         *  An ArrayList<Movie> object
-         * @exception OutOfMemoryError
-         *  Indicates insufficient memory for this new Movie Adapter.
-         */
-        @Override
-        protected void onPostExecute(ArrayList<Movie> moviesObject) {
-            super.onPostExecute(moviesObject);
-
-            MovieAdapter adapter = new MovieAdapter(context.get(), moviesObject);
-            recyclerView.setAdapter(adapter);
-            recyclerView.invalidate();
-        }
-    }
+//    /******************************************************************************************************************
+//     * The ApiRequest class extends AsyncTask to perform a network request on a background thread. The results on the
+//     * network request are then published on our UI thread.
+//     *
+//     * @author mlewis
+//     * @version March 20, 2020
+//     *****************************************************************************************************************/
+//    public static class MovieDatabaseQueryTask extends AsyncTask<URL, Void, ArrayList<Movie>> {
+//        private ArrayList<Movie> moviesObject;
+//        private WeakReference<Context> context;
+//
+//        /**
+//         * public MovieDatabaseQueryTask(Context context)
+//         *  Initializes a new MovieDatabaseQueryTask
+//         * @param context
+//         *  The context of the parent thread.
+//         * @exception OutOfMemoryError
+//         *  Indicates insufficient memory for the weak reference.
+//         */
+//        public MovieDatabaseQueryTask(Context context) {
+//            this.context = new WeakReference<>(context);
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            Log.d(TAG, "AsyncTask has started working.");
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected ArrayList<Movie> doInBackground(URL... urls) {
+//            Log.d(TAG, "Background thread has started.");
+//
+//            URL searchUrl = urls[0];
+//            System.out.println("SEARCH URL IS: " + searchUrl);
+//            String networkResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+//            try {
+//                moviesObject = JsonUtils.parseMovieData(networkResults);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            return moviesObject;
+//        }
+//
+//        /**
+//         * protected void onPostExecute
+//         *  Executes on the main thread.
+//         * @param moviesObject
+//         *  An ArrayList<Movie> object
+//         * @exception OutOfMemoryError
+//         *  Indicates insufficient memory for this new Movie Adapter.
+//         */
+//        @Override
+//        protected void onPostExecute(ArrayList<Movie> moviesObject) {
+//            super.onPostExecute(moviesObject);
+//
+//            MovieAdapter adapter = new MovieAdapter(context.get(), moviesObject);
+//            recyclerView.setAdapter(adapter);
+//            recyclerView.invalidate();
+//        }
+//    }
 }

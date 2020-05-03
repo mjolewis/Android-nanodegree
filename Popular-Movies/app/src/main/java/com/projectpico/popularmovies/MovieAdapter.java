@@ -11,22 +11,24 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.projectpico.popularmovies.model.MovieModel;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**********************************************************************************************************************
  * Adapters provide a binding from an app-specific data set to views that are displayed within a RecyclerView.
  * 
  * @author mlewis 
- * @version March 20, 2020
+ * @version May 2, 2020
  *********************************************************************************************************************/
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     // Invariant of the MovieAdapter.java class
     //  1. The instance variable movieArrayList is a list of move objects with the associated meta data for each move.
     //  3. The instance variable listener listens for user clicks to activate the movie detail activity.
     //  2. The class variable TAG is used for debugging purposes.
-    private ArrayList<Movie> movieArrayList;
+    private List<MovieModel> movieList;
+    private Context context;
     private Callback activityCallback;
     private static final String BASE_URL = "https://image.tmdb.org/t/p/w185";
     private static final String TAG = MovieAdapter.class.getSimpleName();
@@ -35,15 +37,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * public MovieAdapter(ArrayList<String> json)
      *  Initializes a custom Adapter, which provides a binding from our movies API data set to views that are displayed
      *  within the apps RecyclerView.
-     * @param movieArrayList
+     * @param movieList
      *  A movie object containing multiple ArrayLists of movie data such as "title', "releaseDate", "posterPaths",
      *  "voteAverages", and "plots".
      * @exception OutOfMemoryError
      *  Indicates insufficient memory for a new MovieAdapter.
      */
-    public MovieAdapter(Context activityContext, ArrayList<Movie> movieArrayList) {
-        this.movieArrayList = movieArrayList;
-        activityCallback = (Callback) activityContext;
+    public MovieAdapter(Context context, List<MovieModel> movieList) {
+        this.movieList = movieList;
+        activityCallback = (Callback) context;
         Log.d(TAG, "New adapter constructed.");
     }
 
@@ -55,7 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        return movieArrayList.size();
+        return movieList.size();
     }
 
     /**
@@ -92,17 +94,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        Movie currentMovie = movieArrayList.get(position);
-        holder.bind(currentMovie);
+        MovieModel currentMovie = movieList.get(position);
+        holder.bind(currentMovie.getResults());
 
-        String fullUrl = BASE_URL + currentMovie.getPosterPath();
+        String fullUrl = BASE_URL + currentMovie.getResults().getPosterPath();
         Picasso.get()
                 .load(fullUrl)
                 //.placeholder()
                 //.error()
                 .into(holder.imageView);
 
-        Log.d(TAG, currentMovie.getPosterPath());
+        Log.d(TAG, currentMovie.getResults().getPosterPath());
     }
 
     /******************************************************************************************************************
@@ -117,8 +119,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         private String posterPath;
         private String movieTitle;
         private String movieReleaseDate;
-        private String voteAverage;
-        private String moviePlot;
+        private double voteAverage;
+        private String overview;
 
         /**
          * public MovieViewHolder(CardView view)
@@ -145,7 +147,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
          */
         @Override
         public void onClick(View v) {
-            activityCallback.onMovieSelected(posterPath, movieTitle, movieReleaseDate, voteAverage, moviePlot);
+            activityCallback.onMovieSelected(posterPath, movieTitle, movieReleaseDate, voteAverage, overview);
         }
 
         /**
@@ -154,12 +156,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
          * @param currentMovie
          *  The movie in the current view.
          */
-        public void bind(Movie currentMovie) {
+        public void bind(MovieModel.Results currentMovie) {
             posterPath = currentMovie.getPosterPath();
             movieTitle = currentMovie.getTitle();
             movieReleaseDate = currentMovie.getReleaseDate();
             voteAverage = currentMovie.getVoteAverage();
-            moviePlot = currentMovie.getPlot();
+            overview = currentMovie.getOverview();
         }
     }
 }

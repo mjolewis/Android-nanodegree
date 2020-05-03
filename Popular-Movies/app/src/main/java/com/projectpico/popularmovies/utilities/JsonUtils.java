@@ -1,6 +1,6 @@
 package com.projectpico.popularmovies.utilities;
 
-import com.projectpico.popularmovies.Movie;
+import com.projectpico.popularmovies.model.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

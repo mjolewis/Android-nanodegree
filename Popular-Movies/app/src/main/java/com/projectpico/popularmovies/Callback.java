@@ -8,6 +8,6 @@ package com.projectpico.popularmovies;
  * @version March 21, 2020
  *********************************************************************************************************************/
 public interface Callback {
-    void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, String voteAverage,
+    void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, double voteAverage,
                          String moviePlot);
 }
