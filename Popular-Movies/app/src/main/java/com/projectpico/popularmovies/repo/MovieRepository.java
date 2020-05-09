@@ -4,9 +4,8 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.projectpico.popularmovies.Constants;
 import com.projectpico.popularmovies.model.Movie;
-import com.projectpico.popularmovies.model.Reviews;
-import com.projectpico.popularmovies.model.Trailers;
 import com.projectpico.popularmovies.utilities.MovieApi;
 import com.projectpico.popularmovies.utilities.MovieClient;
 
@@ -26,6 +25,7 @@ public class MovieRepository {
     // 1.
     private static MovieRepository movieRepository;
     private MovieApi movieApi;
+    final MutableLiveData<Movie> movieMutableLiveData = new MutableLiveData<>();
     private static final String TAG = MovieRepository.class.getSimpleName();
 
     /**
@@ -46,134 +46,134 @@ public class MovieRepository {
     /* Helper method that gets an instance of the move client, which is an HTTP client provided by Retrofit. */
     private MovieRepository() { movieApi = MovieClient.getInstance(); }
 
-    /**
-     * public MutuableLiveData<MovieModel> getPopularMovies(String key)
-     *  Processes an asynchronous network request using a callback.
-     * @param key
-     *  An API key used by the HTTP client.
-     * @return MutableLiveData<MovieModel>
-     *  A list of movies.
-     */
-    public MutableLiveData<Movie> getPopularMovies(String key) {
-        final MutableLiveData<Movie> popularMovies = new MutableLiveData<>();
+    public MutableLiveData<Movie> getMovie(int movieId) {
 
-        /* Processes the network request on a background thread. */
-        movieApi.getPopularMovies(key)
-                .enqueue(new Callback<Movie>() {
-            @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (!response.isSuccessful()) {
-                    Log.d(TAG, "Error code: " + response.code());
-                } else {
-                    popularMovies.setValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
-                Log.d(TAG, "Response = " + t.toString());
-                popularMovies.setValue(null);
-            }
-        });
-        return popularMovies;
-    }
-
-    /**
-     * public MutuableLiveData<MovieModel> getTopRatedMovies(String key)
-     *  Processes an asynchronous network request using a callback.
-     * @param key
-     *  An API key used by the HTTP client.
-     * @return MutableLiveData<MovieModel>
-     *  A list of movies.
-     */
-    public MutableLiveData<Movie> getTopRatedMovies(String key) {
-        final MutableLiveData<Movie> topRatedMovies = new MutableLiveData<>();
-
-        /* Processes the network request on a background thread. */
-        movieApi.getTopRatedMovies(key)
+        movieApi.getMovie(movieId, Constants.TMDB_API_KEY)
                 .enqueue(new Callback<Movie>() {
                     @Override
                     public void onResponse(Call<Movie> call, Response<Movie> response) {
                         if (!response.isSuccessful()) {
                             Log.d(TAG, "Error code: " + response.code());
                         } else {
-                            topRatedMovies.setValue(response.body());
+                            movieMutableLiveData.setValue(response.body());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Movie> call, Throwable t) {
                         Log.d(TAG, "Response = " + t.toString());
-                        topRatedMovies.setValue(null);
+                        movieMutableLiveData.setValue(null);
                     }
                 });
-        return topRatedMovies;
+        return movieMutableLiveData;
+    }
+
+    public MutableLiveData<Movie> getMovies(SortBy sortBy, int page) {
+        switch (sortBy) {
+            case MostPopular:
+                getPopularMovies(page);
+                break;
+            case TopRated:
+                getTopRatedMovies(page);
+                break;
+        }
+        return movieMutableLiveData;
     }
 
     /**
-     * public MutuableLiveData<MovieModel> getMovieReviews(int movieId, String key)
+     * public MutuableLiveData<MovieModel> getPopularMovies(String key)
      *  Processes an asynchronous network request using a callback.
-     * @param movieId
-     *  An endpoint used by the HTTP client.
-     * @param key
+     * @param page
      *  An API key used by the HTTP client.
      * @return MutableLiveData<MovieModel>
      *  A list of movies.
      */
-    public MutableLiveData<Reviews> getMovieReviews(int movieId, String key) {
-        final MutableLiveData<Reviews> movieReviews = new MutableLiveData<>();
+    public MutableLiveData<Movie> getPopularMovies(int page) {
 
         /* Processes the network request on a background thread. */
-        movieApi.getMovieReviews(movieId, key)
-                .enqueue(new Callback<Reviews>() {
-                    @Override
-                    public void onResponse(Call<Reviews> call, Response<Reviews> response) {
-                        if (!response.isSuccessful()) {
-                            Log.d(TAG, "Error code: " + response.code());
-                        } else {
-                            movieReviews.setValue(response.body());
-                        }
-                    }
+        movieApi.getPopularMovies(Constants.TMDB_API_KEY, page)
+                .enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error code: " + response.code());
+                } else {
+                    movieMutableLiveData.setValue(response.body());
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<Reviews> call, Throwable t) {
-                        Log.d(TAG, "Response = " + t.toString());
-                        movieReviews.setValue(null);
-                    }
-                });
-        return movieReviews;
+            @Override
+            public void onFailure(Call<Movie> call, Throwable t) {
+                Log.d(TAG, "Response = " + t.toString());
+                movieMutableLiveData.setValue(null);
+            }
+        });
+        return movieMutableLiveData;
     }
 
     /**
-     * public MutuableLiveData<MovieModel> getMovieTrailers(int movieId, String key)
+     * public MutuableLiveData<MovieModel> getTopRatedMovies(String key)
      *  Processes an asynchronous network request using a callback.
-     * @param movieId
-     *  An endpoint used by the HTTP client.
-     * @param key
+     * @param page
      *  An API key used by the HTTP client.
      * @return MutableLiveData<MovieModel>
      *  A list of movies.
      */
-    public MutableLiveData<Trailers> getMovieTrailers(int movieId, String key) {
-        final MutableLiveData<Trailers> movieTrailers = new MutableLiveData<>();
+    public MutableLiveData<Movie> getTopRatedMovies(int page) {
 
-        movieApi.getMovieTrailers(movieId, key)
-                .enqueue(new Callback<Trailers>() {
+        /* Processes the network request on a background thread. */
+        movieApi.getTopRatedMovies(Constants.TMDB_API_KEY, page)
+                .enqueue(new Callback<Movie>() {
                     @Override
-                    public void onResponse(Call<Trailers> call, Response<Trailers> response) {
+                    public void onResponse(Call<Movie> call, Response<Movie> response) {
                         if (!response.isSuccessful()) {
                             Log.d(TAG, "Error code: " + response.code());
                         } else {
-                            movieTrailers.setValue(response.body());
+                            movieMutableLiveData.setValue(response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Trailers> call, Throwable t) {
+                    public void onFailure(Call<Movie> call, Throwable t) {
                         Log.d(TAG, "Response = " + t.toString());
-                        movieTrailers.setValue(null);
+                        movieMutableLiveData.setValue(null);
                     }
                 });
-        return movieTrailers;
+        return movieMutableLiveData;
+    }
+
+    /**
+     * public enum SortBy
+     *  A set of fixed constants used by our UI controller to determine what movies to display.
+     */
+    public enum SortBy {
+        MostPopular(0),
+        TopRated(1),
+        Favorite(2);
+
+        private int value;
+
+        SortBy(int value) {
+            this.value = value;
+        }
+
+        /**
+         * public int id
+         *  Accessor method that returns the enum index
+         * @return int
+         *  The enum index.
+         */
+        public int id() {
+            return value;
+        }
+
+        public static SortBy fromId(int value) {
+            for (SortBy color : values()) {
+                if (color.value == value) {
+                    return color;
+                }
+            }
+            return MostPopular;
+        }
     }
 }

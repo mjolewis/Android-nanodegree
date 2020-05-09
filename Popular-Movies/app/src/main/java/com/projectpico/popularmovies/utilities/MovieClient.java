@@ -3,6 +3,10 @@ package com.projectpico.popularmovies.utilities;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.projectpico.popularmovies.Constants;
+import com.projectpico.popularmovies.model.Movie;
+
+import java.io.Serializable;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -13,14 +17,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @author mlewis
  * @version May 3, 2020
  *********************************************************************************************************************/
-public class MovieClient {
+public class MovieClient implements Serializable {
     // Invariant of the MovieResponse.java class
     // 1. The class variable DATE_FORMAT is used to map the date data directly from a String to a Date object.
-    // 2. The class variable BASE_URL is used by the MovieApi when retrieving data from a REST api.
-    // 3. The class variable retrofit is a reference to a type-safe HTTP client.
+    // 2. The class variable retrofit is a reference to a type-safe HTTP client.
     // 3. The class variable TAG is used for logging.
     private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private static final String BASE_URL = "https://api.themoviedb.org/";
     private static Retrofit retrofit;
     private static final String TAG = MovieClient.class.getSimpleName();
 
@@ -36,7 +38,7 @@ public class MovieClient {
     public static MovieApi getInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.TMDB_API_URL)
                     .addConverterFactory(GsonConverterFactory.create(gsonBuilder()))
                     .build();
         }
