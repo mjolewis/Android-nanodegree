@@ -24,7 +24,6 @@ import com.squareup.picasso.Picasso;
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ViewHolder> {
     private Context context;
     private Trailers trailers;
-    private static final String 
     private static final String TAG = TrailersAdapter.class.getSimpleName();
 
     public TrailersAdapter(Context context, Trailers trailers) {
@@ -45,11 +44,10 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ViewHo
     public void onBindViewHolder(@NonNull TrailersAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        final Trailers.Youtube trailer = trailers.getYoutube().get(position);
+        final Trailers.Trailer trailer = trailers.getResults().get(position);
 
-        // FIXME: 5/3/20 
         Picasso.get()
-                .load()
+                .load(buildTrailerUrl(trailer.getKey()))
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.videoThumbnail);
@@ -65,11 +63,11 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ViewHo
      */
     @Override
     public int getItemCount() {
-        return trailers.getYoutube().size();
+        return trailers.getResults().size();
     }
 
-    private String trailerUrl(String trailerId) {
-        return
+    private String buildTrailerUrl(String trailerId) {
+        return "https://img.youtube.com/vi/" + trailerId + "/hqdefault.jpg";
     }
 
     /******************************************************************************************************************

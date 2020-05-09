@@ -26,7 +26,7 @@
 
     <style name="MovieTitle">
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/colorDarkGrey</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -37,18 +37,18 @@
 
     <style name="MovieDate">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
     </style>
 
     <style name="MovieItemLabel">
-        <item name="android:textColor">@color/colorDarkGrey</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="MovieItemValue">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
     </style>
 
 </resources>

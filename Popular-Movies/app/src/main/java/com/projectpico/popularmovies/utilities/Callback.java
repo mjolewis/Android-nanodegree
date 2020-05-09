@@ -1,4 +1,4 @@
-package com.projectpico.popularmovies;
+package com.projectpico.popularmovies.utilities;
 
 /**********************************************************************************************************************
  * Allows us to decouple the adapter from the intent to start a detail activity. This is a more modular approach

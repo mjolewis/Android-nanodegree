@@ -1,17 +1,29 @@
 <resources>
+
+    <!-- Global resources -->
     <string name="app_name">Popular Movies</string>
+
+
+
     <string name="movie_poster">Movie Poster</string>
-    <string name="most_popular_query">Most Popular</string>
-    <string name="high_rated_query">Highest Rated</string>
     <string name="title">Title</string>
     <string name="release_date">Release Date</string>
     <string name="vote_average">Movie Rating</string>
     <string name="plot">Plot</string>
     <string name="favorite_button">MARK AS FAVORITE</string>
     <string name="trailer">Trailers:</string>
-    <string name="favorite_movies">Favorites</string>
     <string name="detail_activity_name">Movie Detail</string>
+
+    <!-- Main activity -->
+    <string name="sort">Sort</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="favorites">Favorites</string>
+    <string name="no_internet">No Internet Connection</string>
+
+    <!-- MovieFragment -->
     <string name="movie_backdrop_image">Movie Backdrop Image</string>
+    <string name="reviews">Reviews</string>
     <string name="movie_trailer">Movie Trailer</string>
     <string name="play_button">Play Button</string>
 </resources>

@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.projectpico.popularmovies.Callback;
+import com.projectpico.popularmovies.utilities.Callback;
 import com.projectpico.popularmovies.R;
 import com.projectpico.popularmovies.model.Movie;
 import com.squareup.picasso.Picasso;
