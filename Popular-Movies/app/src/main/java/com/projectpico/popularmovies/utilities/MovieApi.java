@@ -1,6 +1,7 @@
 package com.projectpico.popularmovies.utilities;
 
-import com.projectpico.popularmovies.model.Movie;
+import com.projectpico.popularmovies.model.Movie.Movie;
+import com.projectpico.popularmovies.model.Movies;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,10 +17,10 @@ import retrofit2.http.Query;
 public interface MovieApi {
 
     @GET("movie/popular")
-    Call<Movie> getPopularMovies(@Query("api_key") String apiKey, @Query("page") int page);
+    Call<Movies> getPopularMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("movie/top_rated")
-    Call<Movie> getTopRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
+    Call<Movies> getTopRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     /* The API methods support a query parameter called append_to_response. This makes it possible to make sub requests
     *  within the same namespace in a single HTTP request. Each request will get appended to the response as a new JSON

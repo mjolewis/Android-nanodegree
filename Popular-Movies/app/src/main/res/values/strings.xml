@@ -20,6 +20,7 @@
     <string name="top_rated">Top Rated</string>
     <string name="favorites">Favorites</string>
     <string name="no_internet">No Internet Connection</string>
+    <string name="movies">Movies</string>
 
     <!-- MovieFragment -->
     <string name="movie_backdrop_image">Movie Backdrop Image</string>

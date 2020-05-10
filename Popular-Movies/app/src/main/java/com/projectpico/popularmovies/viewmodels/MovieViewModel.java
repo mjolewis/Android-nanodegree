@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.projectpico.popularmovies.model.Movie;
+import com.projectpico.popularmovies.model.Movie.Movie;
+import com.projectpico.popularmovies.model.Movies;
 import com.projectpico.popularmovies.repo.MovieRepository;
 
 /**********************************************************************************************************************
@@ -18,6 +19,7 @@ import com.projectpico.popularmovies.repo.MovieRepository;
 public class MovieViewModel extends ViewModel {
 
     private MutableLiveData<Movie> movieMutableLiveData;
+    private MutableLiveData<Movies> moviesMutableLiveData;
     private MovieRepository movieRepository;
 
     /**
@@ -39,7 +41,7 @@ public class MovieViewModel extends ViewModel {
      * @return LiveData<MovieModel>
      *  A list of movies that can be observed by our UI controller.
      */
-    public LiveData<Movie> getMovieRepository() {
-        return movieMutableLiveData;
+    public LiveData<Movies> getMovieRepository() {
+        return moviesMutableLiveData;
     }
 }
