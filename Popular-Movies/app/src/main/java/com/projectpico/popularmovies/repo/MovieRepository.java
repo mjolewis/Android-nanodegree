@@ -5,7 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.projectpico.popularmovies.Constants;
-import com.projectpico.popularmovies.model.Movie;
+import com.projectpico.popularmovies.model.Movie.Movie;
+import com.projectpico.popularmovies.model.Movies;
 import com.projectpico.popularmovies.utilities.MovieApi;
 import com.projectpico.popularmovies.utilities.MovieClient;
 
@@ -25,7 +26,8 @@ public class MovieRepository {
     // 1.
     private static MovieRepository movieRepository;
     private MovieApi movieApi;
-    final MutableLiveData<Movie> movieMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Movie> movieMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Movies> moviesMutableLiveData = new MutableLiveData<>();
     private static final String TAG = MovieRepository.class.getSimpleName();
 
     /**
@@ -88,27 +90,27 @@ public class MovieRepository {
      * @return MutableLiveData<MovieModel>
      *  A list of movies.
      */
-    public MutableLiveData<Movie> getPopularMovies(int page) {
+    public MutableLiveData<Movies> getPopularMovies(int page) {
 
         /* Processes the network request on a background thread. */
         movieApi.getPopularMovies(Constants.TMDB_API_KEY, page)
-                .enqueue(new Callback<Movie>() {
+                .enqueue(new Callback<Movies>() {
             @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
+            public void onResponse(Call<Movies> call, Response<Movies> response) {
                 if (!response.isSuccessful()) {
                     Log.d(TAG, "Error code: " + response.code());
                 } else {
-                    movieMutableLiveData.setValue(response.body());
+                    moviesMutableLiveData.setValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
+            public void onFailure(Call<Movies> call, Throwable t) {
                 Log.d(TAG, "Response = " + t.toString());
-                movieMutableLiveData.setValue(null);
+                moviesMutableLiveData.setValue(null);
             }
         });
-        return movieMutableLiveData;
+        return moviesMutableLiveData;
     }
 
     /**
@@ -119,27 +121,27 @@ public class MovieRepository {
      * @return MutableLiveData<MovieModel>
      *  A list of movies.
      */
-    public MutableLiveData<Movie> getTopRatedMovies(int page) {
+    public MutableLiveData<Movies> getTopRatedMovies(int page) {
 
         /* Processes the network request on a background thread. */
         movieApi.getTopRatedMovies(Constants.TMDB_API_KEY, page)
-                .enqueue(new Callback<Movie>() {
+                .enqueue(new Callback<Movies>() {
                     @Override
-                    public void onResponse(Call<Movie> call, Response<Movie> response) {
+                    public void onResponse(Call<Movies> call, Response<Movies> response) {
                         if (!response.isSuccessful()) {
                             Log.d(TAG, "Error code: " + response.code());
                         } else {
-                            movieMutableLiveData.setValue(response.body());
+                            moviesMutableLiveData.setValue(response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Movie> call, Throwable t) {
+                    public void onFailure(Call<Movies> call, Throwable t) {
                         Log.d(TAG, "Response = " + t.toString());
-                        movieMutableLiveData.setValue(null);
+                        moviesMutableLiveData.setValue(null);
                     }
                 });
-        return movieMutableLiveData;
+        return moviesMutableLiveData;
     }
 
     /**

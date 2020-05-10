@@ -8,27 +8,23 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.projectpico.popularmovies.model.MovieResults;
 import com.projectpico.popularmovies.model.Movies;
 import com.projectpico.popularmovies.repo.MovieRepository;
 import com.projectpico.popularmovies.utilities.Callback;
 import com.projectpico.popularmovies.R;
 import com.projectpico.popularmovies.adapters.MovieAdapter;
-import com.projectpico.popularmovies.model.Movie;
 import com.projectpico.popularmovies.utilities.NetworkConnection;
 import com.projectpico.popularmovies.viewmodels.MovieViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**********************************************************************************************************************
@@ -83,15 +79,15 @@ public class MainActivity extends AppCompatActivity implements Callback {
                 movieViewModel.initMovies(sortBy, page);
 
                 /* Create the observer to update the UI */
-                Observer<Movie> movieObserver = new Observer<Movie>() {
+                Observer<Movies> movieObserver = new Observer<Movies>() {
                     @Override
-                    public void onChanged(Movie movies) {
-                        List<Movie.Results> movieResults = movies.getResults();
+                    public void onChanged(Movies movies) {
+                        List<MovieResults> movieResults = movies.getResults();
 //                        movieList.addAll(movieResults);
 //                        movieAdapter.notifyDataSetChanged();
                         if (movieResults != null) {
                             if (page == 1) {
-
+                                setRecy
                             }
                         }
                     }
@@ -151,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
                         sortBy = MovieRepository.SortBy.MostPopular;
                         loadMovies();
                         item.setChecked(true);
-                        saveSortSelected;
+                        //saveSortSelected;
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT)
                                 .show();
@@ -164,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
                         sortBy = MovieRepository.SortBy.TopRated;
                         loadMovies();
                         item.setChecked(true);
-                        saveSortSelected;
+                        //saveSortSelected;
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_SHORT)
                                 .show();
@@ -179,28 +175,42 @@ public class MainActivity extends AppCompatActivity implements Callback {
                     sortBy = MovieRepository.SortBy.Favorite;
                     loadMovies();
                     item.setChecked(true);
-                    saveSelected;
+                    //saveSelected;
                 }
         }
-        setTitleBySortSelection();
+        setActivityTitleBySortMenuItem();
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, double voteAverage,
-//                                String moviePlot) {
-//        Intent intent = new Intent(this, MovieDetailActivity.class);
-//
-//        Bundle bundle = new Bundle();
-//        bundle.putString(MovieDetailActivity.EXTRA_POSTER_PATH, posterPath);
-//        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_TITLE, movieTitle);
-//        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_RELEASE_DATE, movieReleaseDate);
-//        bundle.putDouble(MovieDetailActivity.EXTRA_MOVIE_VOTE_AVERAGE, voteAverage);
-//        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_PLOT, moviePlot);
-//
-//        intent.putExtras(bundle);
-//        startActivity(intent);
-//    }
+    @Override
+    public void onMovieSelected(String posterPath, String movieTitle, String movieReleaseDate, double voteAverage,
+                                String moviePlot) {
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(MovieDetailActivity.EXTRA_POSTER_PATH, posterPath);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_TITLE, movieTitle);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_RELEASE_DATE, movieReleaseDate);
+        bundle.putDouble(MovieDetailActivity.EXTRA_MOVIE_VOTE_AVERAGE, voteAverage);
+        bundle.putString(MovieDetailActivity.EXTRA_MOVIE_PLOT, moviePlot);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void setActivityTitleBySortMenuItem() {
+        switch (sortBy) {
+            case MostPopular:
+                setTitle(getString(R.string.most_popular) + " " + getString(R.string.movies));
+                break;
+            case TopRated:
+                setTitle(getString(R.string.top_rated) + " " + getString(R.string.movies));
+                break;
+            case Favorite:
+                setTitle(getString(R.string.favorites) + " " + getString(R.string.movies));
+                break;
+        }
+    }
 
     /* Helper method to construct a RecyclerView */
     private void setupRecyclerView() {
